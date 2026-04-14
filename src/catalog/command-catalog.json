@@ -1,0 +1,3157 @@
+[
+  {
+    "className": "CreateAddonCommand",
+    "category": "addon",
+    "importSubpath": "addon/create-addon-command.js",
+    "description": "Create addon",
+    "params": {
+      "ownerId": "string",
+      "name": "string",
+      "zone": "string",
+      "providerId": "string",
+      "planId": "string",
+      "options": "Record<string, string>"
+    },
+    "requiredParams": [
+      "ownerId",
+      "name",
+      "zone",
+      "providerId",
+      "planId"
+    ],
+    "endpoints": [
+      "[POST] /v2/organisations/:XXX/addons"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteAddonCommand",
+    "category": "addon",
+    "importSubpath": "addon/delete-addon-command.js",
+    "description": "Delete addon",
+    "params": {
+      "addonId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "addonId"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/addons/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetAddonCommand",
+    "category": "addon",
+    "importSubpath": "addon/get-addon-command.js",
+    "description": "Get addon",
+    "params": {
+      "addonId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "addonId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/addons/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetAddonSsoCommand",
+    "category": "addon",
+    "importSubpath": "addon/get-addon-sso-command.js",
+    "description": "Get addon sso",
+    "params": {
+      "addonId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "addonId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/addons/:XXX/sso"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListAddonCommand",
+    "category": "addon",
+    "importSubpath": "addon/list-addon-command.js",
+    "description": "List addon",
+    "params": {
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/addons"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateAddonCommand",
+    "category": "addon",
+    "importSubpath": "addon/update-addon-command.js",
+    "description": "Update addon",
+    "params": {
+      "addonId": "string",
+      "ownerId": "string",
+      "name": "string"
+    },
+    "requiredParams": [
+      "addonId",
+      "name"
+    ],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/addons/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateAddonProviderCommand",
+    "category": "addon-provider",
+    "importSubpath": "addon-provider/create-addon-provider-command.js",
+    "description": "Create addon provider",
+    "params": {
+      "ownerId": "string",
+      "id": "string",
+      "name": "string",
+      "api": "{\n    // renamed from config_vars\n    configVars: string[]",
+      "zones": "string[]",
+      "password": "string",
+      "ssoSalt": "string",
+      "production": "{\n      // renamed from base_url\n      baseUrl: string",
+      "ssoUrl": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "id",
+      "name",
+      "api",
+      "zones",
+      "password",
+      "ssoSalt",
+      "production",
+      "ssoUrl"
+    ],
+    "endpoints": [
+      "[POST] /v2/organisations/:XXX/addonproviders"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateAddonProviderFeatureCommand",
+    "category": "addon-provider",
+    "importSubpath": "addon-provider/create-addon-provider-feature-command.js",
+    "description": "Create addon provider feature",
+    "params": {
+      "addonProviderId": "string",
+      "ownerId": "string",
+      "name": "string",
+      "type": "AddonProviderFeatureType"
+    },
+    "requiredParams": [
+      "addonProviderId",
+      "name",
+      "type"
+    ],
+    "endpoints": [
+      "[POST] /v2/organisations/:XXX/addonproviders/:XXX/features"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateAddonProviderPlanCommand",
+    "category": "addon-provider",
+    "importSubpath": "addon-provider/create-addon-provider-plan-command.js",
+    "description": "Create addon provider plan",
+    "params": {
+      "addonProviderId": "string",
+      "ownerId": "string",
+      "name": "string",
+      "slug": "string",
+      "price": "number",
+      "features": "Array<{\n    name: string",
+      "type": "AddonProviderFeatureType",
+      "value": "string"
+    },
+    "requiredParams": [
+      "addonProviderId",
+      "name",
+      "slug",
+      "price",
+      "type",
+      "value"
+    ],
+    "endpoints": [
+      "[POST] /v2/organisations/:XXX/addonproviders/:XXX/plans"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteAddonProviderCommand",
+    "category": "addon-provider",
+    "importSubpath": "addon-provider/delete-addon-provider-command.js",
+    "description": "Delete addon provider",
+    "params": {
+      "addonProviderId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "addonProviderId"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/addonproviders/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteAddonProviderFeatureCommand",
+    "category": "addon-provider",
+    "importSubpath": "addon-provider/delete-addon-provider-feature-command.js",
+    "description": "Delete addon provider feature",
+    "params": {
+      "addonProviderId": "string",
+      "ownerId": "string",
+      "name": "string"
+    },
+    "requiredParams": [
+      "addonProviderId",
+      "name"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/addonproviders/:XXX/features/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteAddonProviderPlanCommand",
+    "category": "addon-provider",
+    "importSubpath": "addon-provider/delete-addon-provider-plan-command.js",
+    "description": "Delete addon provider plan",
+    "params": {
+      "addonProviderId": "string",
+      "ownerId": "string",
+      "planId": "string"
+    },
+    "requiredParams": [
+      "addonProviderId",
+      "planId"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/addonproviders/:XXX/plans/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetAddonProviderCommand",
+    "category": "addon-provider",
+    "importSubpath": "addon-provider/get-addon-provider-command.js",
+    "description": "Get addon provider",
+    "params": {
+      "addonProviderId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "addonProviderId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/addonproviders/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListAddonProviderFeatureCommand",
+    "category": "addon-provider",
+    "importSubpath": "addon-provider/list-addon-provider-feature-command.js",
+    "description": "List addon provider feature",
+    "params": {
+      "addonProviderId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "addonProviderId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/addonproviders/:XXX/features"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListAddonProviderPlanCommand",
+    "category": "addon-provider",
+    "importSubpath": "addon-provider/list-addon-provider-plan-command.js",
+    "description": "List addon provider plan",
+    "params": {
+      "addonProviderId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "addonProviderId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/addonproviders/:XXX/plans"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateAddonProviderCommand",
+    "category": "addon-provider",
+    "importSubpath": "addon-provider/update-addon-provider-command.js",
+    "description": "Update addon provider",
+    "params": {
+      "addonProviderId": "string",
+      "ownerId": "string",
+      "name": "string",
+      "website": "string",
+      "supportEmail": "string",
+      "googlePlusName": "string",
+      "twitterName": "string",
+      "analyticsId": "string",
+      "shortDesc": "string",
+      "longDesc": "string",
+      "logoUrl": "string"
+    },
+    "requiredParams": [
+      "addonProviderId"
+    ],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/addonproviders/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateAddonProviderPlanCommand",
+    "category": "addon-provider",
+    "importSubpath": "addon-provider/update-addon-provider-plan-command.js",
+    "description": "Update addon provider plan",
+    "params": {
+      "addonProviderId": "string",
+      "ownerId": "string",
+      "planId": "string",
+      "name": "string",
+      "slug": "string",
+      "price": "number",
+      "features": "Array<{\n    name: string",
+      "type": "AddonProviderFeatureType",
+      "value": "string"
+    },
+    "requiredParams": [
+      "addonProviderId",
+      "planId",
+      "name",
+      "slug",
+      "price",
+      "type",
+      "value"
+    ],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/addonproviders/:XXX/plans/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateApplicationCommand",
+    "category": "application",
+    "importSubpath": "application/create-application-command.js",
+    "description": "Create application",
+    "params": {
+      "applianceId": "string",
+      "archived": "boolean",
+      "branch": "string",
+      "buildFlavor": "string",
+      "cancelOnPush": "boolean",
+      "deploy": "string",
+      "description": "string",
+      "environment": "EnvironmentVariable[]",
+      "favourite": "boolean",
+      "forceHttps": "boolean",
+      "homogeneous": "boolean",
+      "instance": "string",
+      "instanceLifetime": "ApplicationLifetime",
+      "maxFlavor": "string",
+      "maxInstances": "number",
+      "minFlavor": "string",
+      "minInstances": "number",
+      "name": "string",
+      "oauthApp": "ApplicationOauthApp",
+      "ownerId": "string",
+      "publicGitRepositoryUrl": "string",
+      "separateBuild": "boolean",
+      "shutdownable": "boolean",
+      "stickySessions": "boolean",
+      "tags": "string[]",
+      "zone": "string"
+    },
+    "requiredParams": [
+      "instance",
+      "minFlavor",
+      "name",
+      "ownerId"
+    ],
+    "endpoints": [
+      "[POST] /v2/organisations/:XXX/applications",
+      "[GET] /v2/organisations/:XXX/applications/:XXX/branches"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteApplicationCommand",
+    "category": "application",
+    "importSubpath": "application/delete-application-command.js",
+    "description": "Delete application",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/applications/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeployApplicationCommand",
+    "category": "application",
+    "importSubpath": "application/deploy-application-command.js",
+    "description": "Deploy application",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "commit": "string",
+      "useCache": "boolean"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[POST] /v2/organisations/:XXX/applications/:XXX/instances"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetApplicationBranchesCommand",
+    "category": "application",
+    "importSubpath": "application/get-application-branches-command.js",
+    "description": "Get application branches",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/applications/:XXX/branches"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetApplicationCommand",
+    "category": "application",
+    "importSubpath": "application/get-application-command.js",
+    "description": "Get application",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "withBranches": "boolean"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/applications/:XXX",
+      "[GET] /v2/organisations/:XXX/applications/:XXX/branches"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListApplicationCommand",
+    "category": "application",
+    "importSubpath": "application/list-application-command.js",
+    "description": "List application",
+    "params": {
+      "ownerId": "string",
+      "withBranches": "boolean"
+    },
+    "requiredParams": [
+      "ownerId",
+      "withBranches"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/applications"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UndeployApplicationCommand",
+    "category": "application",
+    "importSubpath": "application/undeploy-application-command.js",
+    "description": "Undeploy application",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/applications/:XXX/instances"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateApplicationCommand",
+    "category": "application",
+    "importSubpath": "application/update-application-command.js",
+    "description": "Update application",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "archived": "boolean",
+      "branch": "string",
+      "buildFlavor": "string",
+      "cancelOnPush": "boolean",
+      "deploy": "string",
+      "description": "string",
+      "environment": "EnvironmentVariable[]",
+      "favourite": "boolean",
+      "forceHttps": "boolean",
+      "homogeneous": "boolean",
+      "instanceLifetime": "ApplicationLifetime",
+      "maxFlavor": "string",
+      "maxInstances": "number",
+      "minFlavor": "string",
+      "minInstances": "number",
+      "name": "string",
+      "separateBuild": "boolean",
+      "shutdownable": "boolean",
+      "stickySessions": "boolean",
+      "tags": "string[]",
+      "zone": "string"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/applications/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ConfirmAuthMfaCommand",
+    "category": "auth",
+    "importSubpath": "auth/confirm-auth-mfa-command.js",
+    "description": "Confirm auth mfa",
+    "params": {
+      "kind": "MFAKind",
+      "code": "string",
+      "password": "string",
+      "revokeTokens": "boolean"
+    },
+    "requiredParams": [
+      "kind",
+      "code",
+      "password"
+    ],
+    "endpoints": [
+      "[POST] /v2/self/mfa/:XXX/confirmation"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateAuthMfaCommand",
+    "category": "auth",
+    "importSubpath": "auth/create-auth-mfa-command.js",
+    "description": "Create auth mfa",
+    "params": {
+      "kind": "MFAKind",
+      "password": "string"
+    },
+    "requiredParams": [
+      "kind",
+      "password"
+    ],
+    "endpoints": [
+      "[POST] /v2/self/mfa/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteAuthMfaCommand",
+    "category": "auth",
+    "importSubpath": "auth/delete-auth-mfa-command.js",
+    "description": "Delete auth mfa",
+    "params": {
+      "kind": "MFAKind",
+      "password": "string"
+    },
+    "requiredParams": [
+      "kind",
+      "password"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/self/mfa/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetAuthMfaBackupCodesCommand",
+    "category": "auth",
+    "importSubpath": "auth/get-auth-mfa-backup-codes-command.js",
+    "description": "Get auth mfa backup codes",
+    "params": {
+      "kind": "MFAKind",
+      "password": "string"
+    },
+    "requiredParams": [
+      "kind",
+      "password"
+    ],
+    "endpoints": [
+      "[GET] /v2/self/mfa/:XXX/backupcodes"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateAuthPasswordCommand",
+    "category": "auth",
+    "importSubpath": "auth/update-auth-password-command.js",
+    "description": "Update auth password",
+    "params": {
+      "oldPassword": "string",
+      "newPassword": "string",
+      "revokeTokens": "boolean"
+    },
+    "requiredParams": [
+      "oldPassword",
+      "newPassword"
+    ],
+    "endpoints": [
+      "[PUT] /v2/self/change_password"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListBackupCommand",
+    "category": "backup",
+    "importSubpath": "backup/list-backup-command.js",
+    "description": "List backup",
+    "params": {
+      "addonId": "string",
+      "ownerId": "string",
+      "withCommands": "boolean"
+    },
+    "requiredParams": [
+      "addonId"
+    ],
+    "endpoints": [
+      "[GET] /v2/backups/:XXX/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetConfigProviderCommand",
+    "category": "config-provider",
+    "importSubpath": "config-provider/get-config-provider-command.js",
+    "description": "Get config provider",
+    "params": {
+      "addonId": "string"
+    },
+    "requiredParams": [
+      "addonId"
+    ],
+    "endpoints": [
+      "[GET] /v4/addon-providers/config-provider/addons/:XXX/env"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateConfigProviderCommand",
+    "category": "config-provider",
+    "importSubpath": "config-provider/update-config-provider-command.js",
+    "description": "Update config provider",
+    "params": {
+      "addonId": "string",
+      "environment": "EnvironmentVariable[]"
+    },
+    "requiredParams": [
+      "addonId",
+      "environment"
+    ],
+    "endpoints": [
+      "[PUT] /v4/addon-providers/config-provider/addons/:XXX/env"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ActivateCouponCommand",
+    "category": "credits",
+    "importSubpath": "credits/activate-coupon-command.js",
+    "description": "Activate coupon",
+    "params": {
+      "ownerId": "string",
+      "couponName": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "couponName"
+    ],
+    "endpoints": [
+      "[POST] /v4/billing/organisations/:XXX/applied-coupons"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetCreditsSummaryCommand",
+    "category": "credits",
+    "importSubpath": "credits/get-credits-summary-command.js",
+    "description": "Get credits summary",
+    "params": {
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[GET] /v4/billing/organisations/:XXX/credits/summary"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CancelDeploymentCommand",
+    "category": "deployment",
+    "importSubpath": "deployment/cancel-deployment-command.js",
+    "description": "Cancel deployment",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "deploymentId": "string"
+    },
+    "requiredParams": [
+      "applicationId",
+      "deploymentId"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/applications/:XXX/deployments/:XXX/instances"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetDeploymentCommand",
+    "category": "deployment",
+    "importSubpath": "deployment/get-deployment-command.js",
+    "description": "Get deployment",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "deploymentId": "string"
+    },
+    "requiredParams": [
+      "applicationId",
+      "deploymentId"
+    ],
+    "endpoints": [
+      "[GET] /v4/orchestration/organisations/:XXX/applications/:XXX/deployments/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListDeploymentCommand",
+    "category": "deployment",
+    "importSubpath": "deployment/list-deployment-command.js",
+    "description": "List deployment",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/deployments",
+      "[GET] /v2/organisations/:XXX/applications/:XXX/deployments"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateDomainCommand",
+    "category": "domain",
+    "importSubpath": "domain/create-domain-command.js",
+    "description": "Create domain",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "domain": "string"
+    },
+    "requiredParams": [
+      "applicationId",
+      "domain"
+    ],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/applications/:XXX/vhosts/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteDomainCommand",
+    "category": "domain",
+    "importSubpath": "domain/delete-domain-command.js",
+    "description": "Delete domain",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "domain": "string"
+    },
+    "requiredParams": [
+      "applicationId",
+      "domain"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/applications/:XXX/vhosts/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetPrimaryDomainCommand",
+    "category": "domain",
+    "importSubpath": "domain/get-primary-domain-command.js",
+    "description": "Get primary domain",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/applications/:XXX/vhosts/favourite"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListDomainCommand",
+    "category": "domain",
+    "importSubpath": "domain/list-domain-command.js",
+    "description": "List domain",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/applications/:XXX/vhosts"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "SetPrimaryDomainCommand",
+    "category": "domain",
+    "importSubpath": "domain/set-primary-domain-command.js",
+    "description": "Set primary domain",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "domain": "string"
+    },
+    "requiredParams": [
+      "applicationId",
+      "domain"
+    ],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/applications/:XXX/vhosts/favourite"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UnsetPrimaryDomainCommand",
+    "category": "domain",
+    "importSubpath": "domain/unset-primary-domain-command.js",
+    "description": "Unset primary domain",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/applications/:XXX/vhosts/favourite"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetElasticsearchInfoCommand",
+    "category": "elasticsearch",
+    "importSubpath": "elasticsearch/get-elasticsearch-info-command.js",
+    "description": "Get elasticsearch info",
+    "params": {
+      "addonId": "string"
+    },
+    "requiredParams": [
+      "addonId"
+    ],
+    "endpoints": [
+      "[GET] /v2/providers/es-addon/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateOrUpdateEnvironmentVariableCommand",
+    "category": "environment",
+    "importSubpath": "environment/create-or-update-environment-variable-command.js",
+    "description": "Create or update environment variable",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "name": "string",
+      "value": "string"
+    },
+    "requiredParams": [
+      "applicationId",
+      "name",
+      "value"
+    ],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/applications/:XXX/env/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteEnvironmentVariableCommand",
+    "category": "environment",
+    "importSubpath": "environment/delete-environment-variable-command.js",
+    "description": "Delete environment variable",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "name": "string"
+    },
+    "requiredParams": [
+      "applicationId",
+      "name"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/applications/:XXX/env/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetEnvironmentCommand",
+    "category": "environment",
+    "importSubpath": "environment/get-environment-command.js",
+    "description": "Get environment",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/applications/:XXX/env",
+      "[GET] /v2/organisations/:XXX/addons/:XXX/env",
+      "[GET] /v2/organisations/:XXX/applications/:XXX/dependencies/env",
+      "[GET] /v2/organisations/:XXX/applications/:XXX/env"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetExposedEnvironmentCommand",
+    "category": "environment",
+    "importSubpath": "environment/get-exposed-environment-command.js",
+    "description": "Get exposed environment",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/applications/:XXX/exposed_env"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateEnvironmentCommand",
+    "category": "environment",
+    "importSubpath": "environment/update-environment-command.js",
+    "description": "Update environment",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "environment": "EnvironmentVariable[]"
+    },
+    "requiredParams": [
+      "applicationId",
+      "environment"
+    ],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/applications/:XXX/env"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateExposedEnvironmentCommand",
+    "category": "environment",
+    "importSubpath": "environment/update-exposed-environment-command.js",
+    "description": "Update exposed environment",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "environment": "EnvironmentVariable[]"
+    },
+    "requiredParams": [
+      "applicationId",
+      "environment"
+    ],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/applications/:XXX/exposed_env"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetGithubLinkTransactionIdCommand",
+    "category": "github",
+    "importSubpath": "github/get-github-link-transaction-id-command.js",
+    "description": "Get github link transaction id",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/github"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetGithubUsernameCommand",
+    "category": "github",
+    "importSubpath": "github/get-github-username-command.js",
+    "description": "Get github username",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/github/username"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListGithubApplicationCommand",
+    "category": "github",
+    "importSubpath": "github/list-github-application-command.js",
+    "description": "List github application",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/github/applications"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UnlinkGithubAccountCommand",
+    "category": "github",
+    "importSubpath": "github/unlink-github-account-command.js",
+    "description": "Unlink github account",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[DELETE] /v2/github/link"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DisableGrafanaCommand",
+    "category": "grafana",
+    "importSubpath": "grafana/disable-grafana-command.js",
+    "description": "Disable grafana",
+    "params": {
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[DELETE] /v4/saas/grafana/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "EnableGrafanaCommand",
+    "category": "grafana",
+    "importSubpath": "grafana/enable-grafana-command.js",
+    "description": "Enable grafana",
+    "params": {
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[POST] /v4/saas/grafana/:XXX",
+      "[GET] /v4/saas/grafana/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetGrafanaCommand",
+    "category": "grafana",
+    "importSubpath": "grafana/get-grafana-command.js",
+    "description": "Get grafana",
+    "params": {
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[GET] /v4/saas/grafana/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ResetGrafanaCommand",
+    "category": "grafana",
+    "importSubpath": "grafana/reset-grafana-command.js",
+    "description": "Reset grafana",
+    "params": {
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[POST] /v4/saas/grafana/:XXX/reset"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetHeptapodPriceEstimationCommand",
+    "category": "heptapod",
+    "importSubpath": "heptapod/get-heptapod-price-estimation-command.js",
+    "description": "Get heptapod price estimation",
+    "params": {
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[GET] /v2/saas/heptapod/:XXX/heptapod.host/price-prevision"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetApplicationInstanceCommand",
+    "category": "instance",
+    "importSubpath": "instance/get-application-instance-command.js",
+    "description": "Get application instance",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "instanceId": "string"
+    },
+    "requiredParams": [
+      "applicationId",
+      "instanceId"
+    ],
+    "endpoints": [
+      "[GET] /v4/orchestration/organisations/:XXX/applications/:XXX/instances/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListApplicationInstanceCommand",
+    "category": "instance",
+    "importSubpath": "instance/list-application-instance-command.js",
+    "description": "List application instance",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "since": "Date | number | string",
+      "until": "Date | number | string",
+      "includeState": "InstanceState[]",
+      "excludeState": "InstanceState[]",
+      "deploymentId": "string",
+      "limit": "number",
+      "order": "'DESC' | 'ASC'"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[GET] /v4/orchestration/organisations/:XXX/applications/:XXX/instances"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetInvoiceCommand",
+    "category": "invoice",
+    "importSubpath": "invoice/get-invoice-command.js",
+    "description": "Get invoice",
+    "params": {
+      "ownerId": "string",
+      "invoiceNumber": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "invoiceNumber"
+    ],
+    "endpoints": [
+      "[GET] /v4/billing/organisations/:XXX/invoices/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetInvoiceHtmlCommand",
+    "category": "invoice",
+    "importSubpath": "invoice/get-invoice-html-command.js",
+    "description": "Get invoice html",
+    "params": {
+      "ownerId": "string",
+      "invoiceNumber": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "invoiceNumber"
+    ],
+    "endpoints": [
+      "[GET] /v4/billing/organisations/:XXX/invoices/:XXX.html"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetInvoicePdfCommand",
+    "category": "invoice",
+    "importSubpath": "invoice/get-invoice-pdf-command.js",
+    "description": "Get invoice pdf",
+    "params": {
+      "ownerId": "string",
+      "invoiceNumber": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "invoiceNumber"
+    ],
+    "endpoints": [
+      "[GET] /v4/billing/organisations/:XXX/invoices/:XXX.pdf"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListInvoiceCommand",
+    "category": "invoice",
+    "importSubpath": "invoice/list-invoice-command.js",
+    "description": "List invoice",
+    "params": {
+      "ownerId": "string",
+      "since": "string | number | Date",
+      "until": "string | number | Date",
+      "limit": "number"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[GET] /v4/billing/organisations/:XXX/invoices"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListUnpaidInvoiceCommand",
+    "category": "invoice",
+    "importSubpath": "invoice/list-unpaid-invoice-command.js",
+    "description": "List unpaid invoice",
+    "params": {
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[GET] /v4/billing/organisations/:XXX/invoices/unpaid"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetJenkinsInfoCommand",
+    "category": "jenkins",
+    "importSubpath": "jenkins/get-jenkins-info-command.js",
+    "description": "Get jenkins info",
+    "params": {
+      "addonId": "string"
+    },
+    "requiredParams": [
+      "addonId"
+    ],
+    "endpoints": [
+      "[GET] /v4/addon-providers/jenkins/addons/:XXX",
+      "[GET] /v4/addon-providers/jenkins/addons/:XXX/updates"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "AddLinkCommand",
+    "category": "link",
+    "importSubpath": "link/add-link-command.js",
+    "description": "Add link",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX",
+      "[POST] /v2/organisations/:XXX/applications/:XXX/addons"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "AddApplicationToApplicationLinkCommand",
+    "category": "link",
+    "importSubpath": "link/add-link-command.js",
+    "description": "Add application to application link",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "targetApplicationId": "string"
+    },
+    "requiredParams": [
+      "applicationId",
+      "targetApplicationId"
+    ],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "AddApplicationToAddonLinkCommand",
+    "category": "link",
+    "importSubpath": "link/add-link-command.js",
+    "description": "Add application to addon link",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "targetAddonId": "string"
+    },
+    "requiredParams": [
+      "applicationId",
+      "targetAddonId"
+    ],
+    "endpoints": [
+      "[POST] /v2/organisations/:XXX/applications/:XXX/addons"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListLinkCommand",
+    "category": "link",
+    "importSubpath": "link/list-link-command.js",
+    "description": "List link",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/addons/:XXX/applications",
+      "[GET] /v2/organisations/:XXX/applications/:XXX/dependencies",
+      "[GET] /v2/organisations/:XXX/applications/:XXX/addons"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "RemoveLinkCommand",
+    "category": "link",
+    "importSubpath": "link/remove-link-command.js",
+    "description": "Remove link",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX",
+      "[DELETE] /v2/organisations/:XXX/applications/:XXX/addons/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "RemoveApplicationToApplicationLinkCommand",
+    "category": "link",
+    "importSubpath": "link/remove-link-command.js",
+    "description": "Remove application to application link",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "targetApplicationId": "string"
+    },
+    "requiredParams": [
+      "applicationId",
+      "targetApplicationId"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/applications/:XXX/dependencies/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "RemoveApplicationToAddonLinkCommand",
+    "category": "link",
+    "importSubpath": "link/remove-link-command.js",
+    "description": "Remove application to addon link",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "targetAddonId": "string"
+    },
+    "requiredParams": [
+      "applicationId",
+      "targetAddonId"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/applications/:XXX/addons/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetLoadBalancerInfoCommand",
+    "category": "load-balancer",
+    "importSubpath": "load-balancer/get-load-balancer-info-command.js",
+    "description": "Get load balancer info",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v4/load-balancers/organisations/:XXX/applications/:XXX/load-balancers/:XXX",
+      "[GET] /v4/load-balancers/organisations/:XXX/addons/:XXX/load-balancers/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListLogCommand",
+    "category": "log",
+    "importSubpath": "log/list-log-command.js",
+    "description": "List log",
+    "params": {
+      "addonId": "string",
+      "ownerId": "string",
+      "limit": "number",
+      "order": "'ASC' | 'DESC'",
+      "since": "string | number",
+      "until": "string | number",
+      "filter": "string",
+      "deploymentId": "string"
+    },
+    "requiredParams": [
+      "addonId"
+    ],
+    "endpoints": [
+      "[GET] /v2/logs/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "StreamAddonRuntimeLogCommand",
+    "category": "log",
+    "importSubpath": "log/stream-addon-runtime-log-command.js",
+    "description": "Stream addon runtime log",
+    "params": {
+      "addonId": "string",
+      "ownerId": "string",
+      "since": "string | number | Date",
+      "until": "string | number | Date",
+      "limit": "number",
+      "deploymentId": "string",
+      "filter": "string",
+      "instanceId": "string[]",
+      "field": "string[]",
+      "throttleElements": "number",
+      "throttlePerInMilliseconds": "number"
+    },
+    "requiredParams": [
+      "addonId"
+    ],
+    "endpoints": [
+      "[GET] /v4/logs/organisations/:XXX/resources/:XXX/logs"
+    ],
+    "isStream": true
+  },
+  {
+    "className": "StreamApplicationAccessLogCommand",
+    "category": "log",
+    "importSubpath": "log/stream-application-access-log-command.js",
+    "description": "Stream application access log",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "since": "string | number | Date",
+      "until": "string | number | Date",
+      "limit": "number",
+      "field": "string[]",
+      "throttleElements": "number",
+      "throttlePerInMilliseconds": "number"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[GET] /v4/accesslogs/organisations/:XXX/applications/:XXX/accesslogs"
+    ],
+    "isStream": true
+  },
+  {
+    "className": "StreamApplicationRuntimeLogCommand",
+    "category": "log",
+    "importSubpath": "log/stream-application-runtime-log-command.js",
+    "description": "Stream application runtime log",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "since": "string | number | Date",
+      "until": "string | number | Date",
+      "limit": "number",
+      "deploymentId": "string",
+      "filter": "string",
+      "instanceId": "string[]",
+      "field": "string[]",
+      "throttleElements": "number",
+      "throttlePerInMilliseconds": "number"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[GET] /v4/logs/organisations/:XXX/applications/:XXX/logs"
+    ],
+    "isStream": true
+  },
+  {
+    "className": "CreateLogDrainCommand",
+    "category": "log-drain",
+    "importSubpath": "log-drain/create-log-drain-command.js",
+    "description": "Create log drain",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[POST] /v4/drains/organisations/:XXX/applications/:XXX/drains",
+      "[GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteLogDrainCommand",
+    "category": "log-drain",
+    "importSubpath": "log-drain/delete-log-drain-command.js",
+    "description": "Delete log drain",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[DELETE] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DisableLogDrainCommand",
+    "category": "log-drain",
+    "importSubpath": "log-drain/disable-log-drain-command.js",
+    "description": "Disable log drain",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[PUT] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX/disable",
+      "[GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "EnableLogDrainCommand",
+    "category": "log-drain",
+    "importSubpath": "log-drain/enable-log-drain-command.js",
+    "description": "Enable log drain",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[PUT] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX/enable",
+      "[GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetLogDrainCommand",
+    "category": "log-drain",
+    "importSubpath": "log-drain/get-log-drain-command.js",
+    "description": "Get log drain",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v4/drains/organisations/:XXX/applications/:XXX/drains/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListLogDrainCommand",
+    "category": "log-drain",
+    "importSubpath": "log-drain/list-log-drain-command.js",
+    "description": "List log drain",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v4/drains/organisations/:XXX/applications/:XXX/drains"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetMateriaInfoCommand",
+    "category": "materia",
+    "importSubpath": "materia/get-materia-info-command.js",
+    "description": "Get materia info",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v4/materia/organisations/:XXX/materia/databases/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetMatomoInfoCommand",
+    "category": "matomo",
+    "importSubpath": "matomo/get-matomo-info-command.js",
+    "description": "Get matomo info",
+    "params": {
+      "addonId": "string"
+    },
+    "requiredParams": [
+      "addonId"
+    ],
+    "endpoints": [
+      "[GET] /v4/addon-providers/:XXX/addons/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetMetricsCommand",
+    "category": "metrics",
+    "importSubpath": "metrics/get-metrics-command.js",
+    "description": "Get metrics",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v4/stats/organisations/:XXX/resources/:XXX/metrics"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CancelMigrationCommand",
+    "category": "migration",
+    "importSubpath": "migration/cancel-migration-command.js",
+    "description": "Cancel migration",
+    "params": {
+      "addonId": "string",
+      "ownerId": "string",
+      "migrationId": "string"
+    },
+    "requiredParams": [
+      "addonId",
+      "migrationId"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/addons/:XXX/migrations/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetMigrationCommand",
+    "category": "migration",
+    "importSubpath": "migration/get-migration-command.js",
+    "description": "Get migration",
+    "params": {
+      "addonId": "string",
+      "ownerId": "string",
+      "migrationId": "string"
+    },
+    "requiredParams": [
+      "addonId",
+      "migrationId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/addons/:XXX/migrations/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListMigrationCommand",
+    "category": "migration",
+    "importSubpath": "migration/list-migration-command.js",
+    "description": "List migration",
+    "params": {
+      "addonId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "addonId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/addons/:XXX/migrations"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListMigrationPreorderCommand",
+    "category": "migration",
+    "importSubpath": "migration/list-migration-preorder-command.js",
+    "description": "List migration preorder",
+    "params": {
+      "addonId": "string",
+      "ownerId": "string",
+      "planId": "string"
+    },
+    "requiredParams": [
+      "addonId",
+      "planId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/addons/:XXX/migrations/preorders"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "StartMigrationCommand",
+    "category": "migration",
+    "importSubpath": "migration/start-migration-command.js",
+    "description": "Start migration",
+    "params": {
+      "addonId": "string",
+      "ownerId": "string",
+      "planId": "string",
+      "zone": "string",
+      "version": "string"
+    },
+    "requiredParams": [
+      "addonId",
+      "planId",
+      "zone",
+      "version"
+    ],
+    "endpoints": [
+      "[POST] /v2/organisations/:XXX/addons/:XXX/migrations"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateNetworkGroupCommand",
+    "category": "network-group",
+    "importSubpath": "network-group/create-network-group-command.js",
+    "description": "Create network group",
+    "params": {
+      "ownerId": "string",
+      "label": "string",
+      "description": "string",
+      "tags": "string[]",
+      "members": "Array<{\n    id: string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[POST] /v4/networkgroups/organisations/:XXX/networkgroups",
+      "[GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateNetworkGroupExternalPeerCommand",
+    "category": "network-group",
+    "importSubpath": "network-group/create-network-group-external-peer-command.js",
+    "description": "Create network group external peer",
+    "params": {
+      "ownerId": "string",
+      "networkGroupId": "string",
+      "label": "string",
+      "ip": "string",
+      "port": "number",
+      "peerRole": "'CLIENT'",
+      "publicKey": "string",
+      "hostname": "string",
+      "parentEvent": "string",
+      "parentMember": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "networkGroupId",
+      "label",
+      "peerRole",
+      "publicKey",
+      "parentMember"
+    ],
+    "endpoints": [
+      "[POST] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/external-peers",
+      "[GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/peers/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateNetworkGroupMemberCommand",
+    "category": "network-group",
+    "importSubpath": "network-group/create-network-group-member-command.js",
+    "description": "Create network group member",
+    "params": {
+      "ownerId": "string",
+      "networkGroupId": "string",
+      "memberId": "string",
+      "label": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "networkGroupId",
+      "memberId"
+    ],
+    "endpoints": [
+      "[POST] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/members",
+      "[GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/members/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteNetworkGroupCommand",
+    "category": "network-group",
+    "importSubpath": "network-group/delete-network-group-command.js",
+    "description": "Delete network group",
+    "params": {
+      "ownerId": "string",
+      "networkGroupId": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "networkGroupId"
+    ],
+    "endpoints": [
+      "[DELETE] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX",
+      "[GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteNetworkGroupExternalPeerCommand",
+    "category": "network-group",
+    "importSubpath": "network-group/delete-network-group-external-peer-command.js",
+    "description": "Delete network group external peer",
+    "params": {
+      "ownerId": "string",
+      "networkGroupId": "string",
+      "externalPeerId": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "networkGroupId",
+      "externalPeerId"
+    ],
+    "endpoints": [
+      "[DELETE] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/external-peers/:XXX",
+      "[GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/peers/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteNetworkGroupMemberCommand",
+    "category": "network-group",
+    "importSubpath": "network-group/delete-network-group-member-command.js",
+    "description": "Delete network group member",
+    "params": {
+      "ownerId": "string",
+      "networkGroupId": "string",
+      "memberId": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "networkGroupId",
+      "memberId"
+    ],
+    "endpoints": [
+      "[DELETE] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/members/:XXX",
+      "[GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/members/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetNetworkGroupCommand",
+    "category": "network-group",
+    "importSubpath": "network-group/get-network-group-command.js",
+    "description": "Get network group",
+    "params": {
+      "ownerId": "string",
+      "networkGroupId": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "networkGroupId"
+    ],
+    "endpoints": [
+      "[GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetNetworkGroupMemberCommand",
+    "category": "network-group",
+    "importSubpath": "network-group/get-network-group-member-command.js",
+    "description": "Get network group member",
+    "params": {
+      "ownerId": "string",
+      "networkGroupId": "string",
+      "memberId": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "networkGroupId",
+      "memberId"
+    ],
+    "endpoints": [
+      "[GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/members/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetNetworkGroupPeerCommand",
+    "category": "network-group",
+    "importSubpath": "network-group/get-network-group-peer-command.js",
+    "description": "Get network group peer",
+    "params": {
+      "ownerId": "string",
+      "networkGroupId": "string",
+      "peerId": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "networkGroupId",
+      "peerId"
+    ],
+    "endpoints": [
+      "[GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/peers/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetNetworkGroupWireguardConfigurationCommand",
+    "category": "network-group",
+    "importSubpath": "network-group/get-network-group-wireguard-configuration-command.js",
+    "description": "Get network group wireguard configuration",
+    "params": {
+      "ownerId": "string",
+      "networkGroupId": "string",
+      "peerId": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "networkGroupId",
+      "peerId"
+    ],
+    "endpoints": [
+      "[GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/peers/:XXX/wireguard/configuration"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetNetworkGroupWireguardConfigurationUrlCommand",
+    "category": "network-group",
+    "importSubpath": "network-group/get-network-group-wireguard-configuration-url-command.js",
+    "description": "Get network group wireguard configuration url",
+    "params": {
+      "ownerId": "string",
+      "networkGroupId": "string",
+      "peerId": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "networkGroupId",
+      "peerId"
+    ],
+    "endpoints": [
+      "[GET] /v4/networkgroups/organisations/:XXX/networkgroups/:XXX/peers/:XXX/wireguard/configuration/presigned-url"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListNetworkGroupCommand",
+    "category": "network-group",
+    "importSubpath": "network-group/list-network-group-command.js",
+    "description": "List network group",
+    "params": {
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[GET] /v4/networkgroups/organisations/:XXX/networkgroups"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "SearchNetworkGroupCommand",
+    "category": "network-group",
+    "importSubpath": "network-group/search-network-group-command.js",
+    "description": "Search network group",
+    "params": {
+      "ownerId": "string",
+      "query": "string",
+      "types": "NetworkGroupComponentType[]"
+    },
+    "requiredParams": [
+      "ownerId",
+      "query"
+    ],
+    "endpoints": [
+      "[GET] /v4/networkgroups/organisations/:XXX/networkgroups/search"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateEmailNotificationCommand",
+    "category": "notification",
+    "importSubpath": "notification/create-email-notification-command.js",
+    "description": "Create email notification",
+    "params": {
+      "ownerId": "string",
+      "name": "string",
+      "targets": "EmailNotificationTarget[]",
+      "events": "string",
+      "scope": "string[]"
+    },
+    "requiredParams": [
+      "ownerId",
+      "name",
+      "targets"
+    ],
+    "endpoints": [
+      "[POST] /v2/notifications/emailhooks/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateWebhookNotificationCommand",
+    "category": "notification",
+    "importSubpath": "notification/create-webhook-notification-command.js",
+    "description": "Create webhook notification",
+    "params": {
+      "ownerId": "string",
+      "name": "string",
+      "urls": "WebhookNotificationUrl[]",
+      "events": "string",
+      "scope": "string[]"
+    },
+    "requiredParams": [
+      "ownerId",
+      "name",
+      "urls"
+    ],
+    "endpoints": [
+      "[POST] /v2/notifications/webhooks/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteEmailNotificationCommand",
+    "category": "notification",
+    "importSubpath": "notification/delete-email-notification-command.js",
+    "description": "Delete email notification",
+    "params": {
+      "ownerId": "string",
+      "emailNotificationId": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "emailNotificationId"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/notifications/emailhooks/:XXX/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteWebhookNotificationCommand",
+    "category": "notification",
+    "importSubpath": "notification/delete-webhook-notification-command.js",
+    "description": "Delete webhook notification",
+    "params": {
+      "ownerId": "string",
+      "webhookNotificationId": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "webhookNotificationId"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/notifications/webhooks/:XXX/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetNotificationInfoCommand",
+    "category": "notification",
+    "importSubpath": "notification/get-notification-info-command.js",
+    "description": "Get notification info",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/notifications/info/events",
+      "[GET] /v2/notifications/info/webhookformats"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListEmailNotificationCommand",
+    "category": "notification",
+    "importSubpath": "notification/list-email-notification-command.js",
+    "description": "List email notification",
+    "params": {
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[GET] /v2/notifications/emailhooks/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListWebhookNotificationCommand",
+    "category": "notification",
+    "importSubpath": "notification/list-webhook-notification-command.js",
+    "description": "List webhook notification",
+    "params": {
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[GET] /v2/notifications/webhooks/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateOauthConsumerCommand",
+    "category": "oauth-consumer",
+    "importSubpath": "oauth-consumer/create-oauth-consumer-command.js",
+    "description": "Create oauth consumer",
+    "params": {
+      "ownerId": "string",
+      "name": "string",
+      "description": "string",
+      "url": "string",
+      "picture": "string",
+      "baseUrl": "string",
+      "rights": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "name",
+      "description",
+      "url",
+      "picture",
+      "baseUrl",
+      "rights"
+    ],
+    "endpoints": [
+      "[POST] /v2/organisations/:XXX/consumers/"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteOauthConsumerCommand",
+    "category": "oauth-consumer",
+    "importSubpath": "oauth-consumer/delete-oauth-consumer-command.js",
+    "description": "Delete oauth consumer",
+    "params": {
+      "ownerId": "string",
+      "oauthConsumerKey": "string"
+    },
+    "requiredParams": [
+      "oauthConsumerKey"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/consumers/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetOauthConsumerCommand",
+    "category": "oauth-consumer",
+    "importSubpath": "oauth-consumer/get-oauth-consumer-command.js",
+    "description": "Get oauth consumer",
+    "params": {
+      "ownerId": "string",
+      "oauthConsumerKey": "string",
+      "withSecret": "boolean"
+    },
+    "requiredParams": [
+      "oauthConsumerKey",
+      "withSecret"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/consumers/:XXX",
+      "[GET] /v2/organisations/:XXX/consumers/:XXX/secret"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetOauthConsumerSecretCommand",
+    "category": "oauth-consumer",
+    "importSubpath": "oauth-consumer/get-oauth-consumer-secret-command.js",
+    "description": "Get oauth consumer secret",
+    "params": {
+      "ownerId": "string",
+      "oauthConsumerKey": "string"
+    },
+    "requiredParams": [
+      "oauthConsumerKey"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/consumers/:XXX/secret"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListOauthConsumerCommand",
+    "category": "oauth-consumer",
+    "importSubpath": "oauth-consumer/list-oauth-consumer-command.js",
+    "description": "List oauth consumer",
+    "params": {
+      "ownerId": "string",
+      "withSecret": "boolean"
+    },
+    "requiredParams": [
+      "ownerId",
+      "withSecret"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/consumers",
+      "[GET] /v2/organisations/:XXX/consumers"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateOauthConsumerCommand",
+    "category": "oauth-consumer",
+    "importSubpath": "oauth-consumer/update-oauth-consumer-command.js",
+    "description": "Update oauth consumer",
+    "params": {
+      "ownerId": "string",
+      "oauthConsumerKey": "string",
+      "name": "string",
+      "description": "string",
+      "url": "string",
+      "picture": "string",
+      "baseUrl": "string",
+      "rights": "string"
+    },
+    "requiredParams": [
+      "oauthConsumerKey",
+      "name",
+      "description",
+      "url",
+      "picture",
+      "baseUrl",
+      "rights"
+    ],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/consumers/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteOauthTokenCommand",
+    "category": "oauth-token",
+    "importSubpath": "oauth-token/delete-all-oauth-tokens-command.js",
+    "description": "Delete oauth token",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[DELETE] /v2/self/tokens"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListOauthTokenCommand",
+    "category": "oauth-token",
+    "importSubpath": "oauth-token/list-oauth-token-command.js",
+    "description": "List oauth token",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/self/tokens"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "AddOrganisationMemberCommand",
+    "category": "organisation",
+    "importSubpath": "organisation/add-organisation-member-command.js",
+    "description": "Add organisation member",
+    "params": {
+      "organisationId": "string",
+      "role": "OrganisationMemberRole",
+      "email": "string",
+      "job": "string",
+      "invitationKey": "string"
+    },
+    "requiredParams": [
+      "organisationId",
+      "role",
+      "email"
+    ],
+    "endpoints": [
+      "[POST] /v2/organisations/:XXX/members"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateOrganisationCommand",
+    "category": "organisation",
+    "importSubpath": "organisation/create-organisation-command.js",
+    "description": "Create organisation",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[POST] /v2/organisations"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteOrganisationCommand",
+    "category": "organisation",
+    "importSubpath": "organisation/delete-organisation-command.js",
+    "description": "Delete organisation",
+    "params": {
+      "organisationId": "string"
+    },
+    "requiredParams": [
+      "organisationId"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetOrganisationCommand",
+    "category": "organisation",
+    "importSubpath": "organisation/get-organisation-command.js",
+    "description": "Get organisation",
+    "params": {
+      "organisationId": "string"
+    },
+    "requiredParams": [
+      "organisationId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetOrganisationSummariesCommand",
+    "category": "organisation",
+    "importSubpath": "organisation/get-organisation-summaries-command.js",
+    "description": "Get organisation summaries",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/summary"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListOrganisationCommand",
+    "category": "organisation",
+    "importSubpath": "organisation/list-organisation-command.js",
+    "description": "List organisation",
+    "params": {
+      "withPersonalOrganisation": "boolean"
+    },
+    "requiredParams": [
+      "withPersonalOrganisation"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListOrganisationMemberCommand",
+    "category": "organisation",
+    "importSubpath": "organisation/list-organisation-member-command.js",
+    "description": "List organisation member",
+    "params": {
+      "organisationId": "string"
+    },
+    "requiredParams": [
+      "organisationId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/members"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "RemoveOrganisationMemberCommand",
+    "category": "organisation",
+    "importSubpath": "organisation/remove-organisation-member-command.js",
+    "description": "Remove organisation member",
+    "params": {
+      "organisationId": "string",
+      "memberId": "string"
+    },
+    "requiredParams": [
+      "organisationId",
+      "memberId"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/members/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateOrganisationAvatarCommand",
+    "category": "organisation",
+    "importSubpath": "organisation/update-organisation-avatar-command.js",
+    "description": "Update organisation avatar",
+    "params": {
+      "organisationId": "string",
+      "mimeType": "string",
+      "data": "Blob"
+    },
+    "requiredParams": [
+      "organisationId",
+      "mimeType",
+      "data"
+    ],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/avatar"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateOrganisationCommand",
+    "category": "organisation",
+    "importSubpath": "organisation/update-organisation-command.js",
+    "description": "Update organisation",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateOrganisationMemberCommand",
+    "category": "organisation",
+    "importSubpath": "organisation/update-organisation-member-command.js",
+    "description": "Update organisation member",
+    "params": {
+      "organisationId": "string",
+      "memberId": "string",
+      "role": "OrganisationMemberRole",
+      "job": "string"
+    },
+    "requiredParams": [
+      "organisationId",
+      "memberId"
+    ],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/members/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "AuthorizePaypalCommand",
+    "category": "payment",
+    "importSubpath": "payment/authorize-paypal-command.js",
+    "description": "Authorize paypal",
+    "params": {
+      "ownerId": "string",
+      "invoiceNumber": "string",
+      "transactionId": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "invoiceNumber",
+      "transactionId"
+    ],
+    "endpoints": [
+      "[PUT] /v4/billing/organisations/:XXX/invoices/:XXX/payments/paypal/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "AuthorizeStripeCommand",
+    "category": "payment",
+    "importSubpath": "payment/authorize-stripe-command.js",
+    "description": "Authorize stripe",
+    "params": {
+      "ownerId": "string",
+      "invoiceNumber": "string",
+      "intentId": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "invoiceNumber",
+      "intentId"
+    ],
+    "endpoints": [
+      "[PUT] /v4/billing/organisations/:XXX/invoices/:XXX/payments/stripe/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetStripeIntentCommand",
+    "category": "payment",
+    "importSubpath": "payment/get-stripe-intent-command.js",
+    "description": "Get stripe intent",
+    "params": {
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[GET] /v4/billing/organisations/:XXX/payments/stripe/intent"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "InitPaypalCommand",
+    "category": "payment",
+    "importSubpath": "payment/init-paypal-command.js",
+    "description": "Init paypal",
+    "params": {
+      "ownerId": "string",
+      "invoiceNumber": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "invoiceNumber"
+    ],
+    "endpoints": [
+      "[POST] /v4/billing/organisations/:XXX/invoices/:XXX/payments/paypal"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "InitStripeCommand",
+    "category": "payment",
+    "importSubpath": "payment/init-stripe-command.js",
+    "description": "Init stripe",
+    "params": {
+      "ownerId": "string",
+      "invoiceNumber": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "invoiceNumber"
+    ],
+    "endpoints": [
+      "[POST] /v4/billing/organisations/:XXX/invoices/:XXX/payments/stripe"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreatePaymentMethodCommand",
+    "category": "payment-method",
+    "importSubpath": "payment-method/create-payment-method-command.js",
+    "description": "Create payment method",
+    "params": {
+      "ownerId": "string",
+      "id": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "id"
+    ],
+    "endpoints": [
+      "[POST] /v4/billing/organisations/:XXX/payments/methods"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeletePaymentMethodCommand",
+    "category": "payment-method",
+    "importSubpath": "payment-method/delete-payment-method-command.js",
+    "description": "Delete payment method",
+    "params": {
+      "ownerId": "string",
+      "token": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "token"
+    ],
+    "endpoints": [
+      "[DELETE] /v4/billing/organisations/:XXX/payments/methods/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListPaymentMethodCommand",
+    "category": "payment-method",
+    "importSubpath": "payment-method/list-payment-method-command.js",
+    "description": "List payment method",
+    "params": {
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[GET] /v4/billing/organisations/:XXX/payments/methods"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "SetPrimaryPaymentMethodCommand",
+    "category": "payment-method",
+    "importSubpath": "payment-method/set-primary-payment-method-command.js",
+    "description": "Set primary payment method",
+    "params": {
+      "ownerId": "string",
+      "id": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "id"
+    ],
+    "endpoints": [
+      "[PUT] /v4/billing/organisations/:XXX/payments/methods/default"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetPriceSystemCommand",
+    "category": "price-system",
+    "importSubpath": "price-system/get-price-system-command.js",
+    "description": "Get price system",
+    "params": {
+      "ownerId": "string",
+      "zone": "string"
+    },
+    "requiredParams": [
+      "ownerId",
+      "zone"
+    ],
+    "endpoints": [
+      "[GET] /v4/billing/organisations/:XXX/price-system"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetProductAddonCommand",
+    "category": "product",
+    "importSubpath": "product/get-product-addon-command.js",
+    "description": "Get product addon",
+    "params": {
+      "id": "string",
+      "withVersions": "boolean",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "id",
+      "withVersions"
+    ],
+    "endpoints": [
+      "[GET] /v2/products/addonproviders/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetProductAddonVersionsCommand",
+    "category": "product",
+    "importSubpath": "product/get-product-addon-versions-command.js",
+    "description": "Get product addon versions",
+    "params": {
+      "id": "string"
+    },
+    "requiredParams": [
+      "id"
+    ],
+    "endpoints": [
+      "[GET] /v4/addon-providers/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetProductElasticsearchInfoCommand",
+    "category": "product",
+    "importSubpath": "product/get-product-elasticsearch-info-command.js",
+    "description": "Get product elasticsearch info",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/providers/es-addon/tmp/services-flavors"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetProductRuntimeCommand",
+    "category": "product",
+    "importSubpath": "product/get-product-runtime-command.js",
+    "description": "Get product runtime",
+    "params": {
+      "type": "string",
+      "version": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "type",
+      "version"
+    ],
+    "endpoints": [
+      "[GET] /v2/products/instances/:XXX-:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListProductAddonCommand",
+    "category": "product",
+    "importSubpath": "product/list-product-addon-command.js",
+    "description": "List product addon",
+    "params": {
+      "withVersions": "boolean",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "withVersions"
+    ],
+    "endpoints": [
+      "[GET] /v2/products/addonproviders",
+      "[GET] /v4/addon-providers/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListProductRuntimeCommand",
+    "category": "product",
+    "importSubpath": "product/list-product-runtime-command.js",
+    "description": "List product runtime",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/products/instances"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateProfileEmailAddressCommand",
+    "category": "profile",
+    "importSubpath": "profile/create-profile-email-address-command.js",
+    "description": "Create profile email address",
+    "params": {
+      "address": "string"
+    },
+    "requiredParams": [
+      "address"
+    ],
+    "endpoints": [
+      "[PUT] /v2/self/emails/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteProfileEmailAddressCommand",
+    "category": "profile",
+    "importSubpath": "profile/delete-profile-email-address-command.js",
+    "description": "Delete profile email address",
+    "params": {
+      "address": "string"
+    },
+    "requiredParams": [
+      "address"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/self/emails/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetProfileCommand",
+    "category": "profile",
+    "importSubpath": "profile/get-profile-command.js",
+    "description": "Get profile",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/self"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListProfileEmailAddressCommand",
+    "category": "profile",
+    "importSubpath": "profile/list-profile-email-address-command.js",
+    "description": "List profile email address",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/self",
+      "[GET] /v2/self/emails"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "RequestProfileEmailConfirmationCommand",
+    "category": "profile",
+    "importSubpath": "profile/request-profile-email-confirmation-command.js",
+    "description": "Request profile email confirmation",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/self/confirmation_email"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "SetProfilePrimaryEmailAddressCommand",
+    "category": "profile",
+    "importSubpath": "profile/set-profile-primary-email-address-command.js",
+    "description": "Set profile primary email address",
+    "params": {
+      "address": "string"
+    },
+    "requiredParams": [
+      "address"
+    ],
+    "endpoints": [
+      "[PUT] /v2/self/emails/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateProfileAvatarCommand",
+    "category": "profile",
+    "importSubpath": "profile/update-profile-avatar-command.js",
+    "description": "Update profile avatar",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[PUT] /v2/self/avatar"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateProfileCommand",
+    "category": "profile",
+    "importSubpath": "profile/update-profile-command.js",
+    "description": "Update profile",
+    "params": {
+      "name": "string",
+      "phone": "string",
+      "address": "string",
+      "city": "string",
+      "zipcode": "string",
+      "country": "string",
+      "lang": "string"
+    },
+    "requiredParams": [],
+    "endpoints": [
+      "[PUT] /v2/self"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetPulsarInfoCommand",
+    "category": "pulsar",
+    "importSubpath": "pulsar/get-pulsar-info-command.js",
+    "description": "Get pulsar info",
+    "params": {
+      "addonId": "string"
+    },
+    "requiredParams": [
+      "addonId"
+    ],
+    "endpoints": [
+      "[GET] /v4/addon-providers/addon-pulsar/addons/:XXX",
+      "[GET] /v4/addon-providers/addon-pulsar/clusters/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreatePersonalSshKeyCommand",
+    "category": "ssh-key",
+    "importSubpath": "ssh-key/create-personal-ssh-key-command.js",
+    "description": "Create personal ssh key",
+    "params": {
+      "name": "string",
+      "key": "string"
+    },
+    "requiredParams": [
+      "name",
+      "key"
+    ],
+    "endpoints": [
+      "[PUT] /v2/self/keys/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeletePersonalSshKeyCommand",
+    "category": "ssh-key",
+    "importSubpath": "ssh-key/delete-personal-ssh-key-command.js",
+    "description": "Delete personal ssh key",
+    "params": {
+      "name": "string"
+    },
+    "requiredParams": [
+      "name"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/self/keys/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListGithubSshKeyCommand",
+    "category": "ssh-key",
+    "importSubpath": "ssh-key/list-github-ssh-key-command.js",
+    "description": "List github ssh key",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/github/keys"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListPersonalSshKeyCommand",
+    "category": "ssh-key",
+    "importSubpath": "ssh-key/list-personal-ssh-key-command.js",
+    "description": "List personal ssh key",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/self/keys"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateTagCommand",
+    "category": "tag",
+    "importSubpath": "tag/create-tag-command.js",
+    "description": "Create tag",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/addons/:XXX/tags"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteTagCommand",
+    "category": "tag",
+    "importSubpath": "tag/delete-tag-command.js",
+    "description": "Delete tag",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/addons/:XXX/tags/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListTagCommand",
+    "category": "tag",
+    "importSubpath": "tag/list-tag-command.js",
+    "description": "List tag",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/addons/:XXX/tags"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "UpdateTagCommand",
+    "category": "tag",
+    "importSubpath": "tag/update-tag-command.js",
+    "description": "Update tag",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[PUT] /v2/organisations/:XXX/addons/:XXX/tags"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CreateTcpRedirectionCommand",
+    "category": "tcp-redirection",
+    "importSubpath": "tcp-redirection/create-tcp-redirection-command.js",
+    "description": "Create tcp redirection",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "namespace": "TcpRedirectionNamespace"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[POST] /v2/organisations/:XXX/applications/:XXX/tcpRedirs"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteTcpRedirectionCommand",
+    "category": "tcp-redirection",
+    "importSubpath": "tcp-redirection/delete-tcp-redirection-command.js",
+    "description": "Delete tcp redirection",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string",
+      "namespace": "TcpRedirectionNamespace",
+      "port": "number"
+    },
+    "requiredParams": [
+      "applicationId",
+      "namespace",
+      "port"
+    ],
+    "endpoints": [
+      "[DELETE] /v2/organisations/:XXX/applications/:XXX/tcpRedirs/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListTcpRedirectionCommand",
+    "category": "tcp-redirection",
+    "importSubpath": "tcp-redirection/list-tcp-redirection-command.js",
+    "description": "List tcp redirection",
+    "params": {
+      "applicationId": "string",
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "applicationId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/applications/:XXX/tcpRedirs"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListTcpRedirectionNamespaceCommand",
+    "category": "tcp-redirection",
+    "importSubpath": "tcp-redirection/list-tcp-redirection-namespace-command.js",
+    "description": "List tcp redirection namespace",
+    "params": {
+      "ownerId": "string"
+    },
+    "requiredParams": [
+      "ownerId"
+    ],
+    "endpoints": [
+      "[GET] /v2/organisations/:XXX/namespaces"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "DeleteUserSettingCommand",
+    "category": "user-setting",
+    "importSubpath": "user-setting/delete-user-setting-command.js",
+    "description": "Delete user setting",
+    "params": {
+      "env": "string",
+      "name": "string"
+    },
+    "requiredParams": [
+      "name"
+    ],
+    "endpoints": [
+      "[DELETE] /v4/console/settings/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetUserSettingCommand",
+    "category": "user-setting",
+    "importSubpath": "user-setting/get-user-setting-command.js",
+    "description": "Get user setting",
+    "params": {
+      "env": "string",
+      "name": "string"
+    },
+    "requiredParams": [
+      "name"
+    ],
+    "endpoints": [
+      "[GET] /v4/console/settings/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "SetUserSettingCommand",
+    "category": "user-setting",
+    "importSubpath": "user-setting/set-user-setting-command.js",
+    "description": "Set user setting",
+    "params": {
+      "env": "string",
+      "name": "string",
+      "value": "string"
+    },
+    "requiredParams": [
+      "name",
+      "value"
+    ],
+    "endpoints": [
+      "[PUT] /v4/console/settings/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "CheckVatNumberCommand",
+    "category": "vat-number",
+    "importSubpath": "vat-number/check-vat-number-command.js",
+    "description": "Check vat number",
+    "params": {
+      "country": "string",
+      "vatNumber": "string"
+    },
+    "requiredParams": [
+      "country",
+      "vatNumber"
+    ],
+    "endpoints": [
+      "[GET] /v2/vat_check"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetWarpTokenCommand",
+    "category": "warp-token",
+    "importSubpath": "warp-token/get-warp-token-command.js",
+    "description": "Get warp token",
+    "params": {
+      "ownerId": "string",
+      "tokenKind": "'METRICS' | 'ACCESS_LOGS'"
+    },
+    "requiredParams": [
+      "ownerId",
+      "tokenKind"
+    ],
+    "endpoints": [
+      "[GET] /v2/metrics/read/:XXX",
+      "[GET] /v2/w10tokens/accessLogs/read/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "GetZoneCommand",
+    "category": "zone",
+    "importSubpath": "zone/get-zone-command.js",
+    "description": "Get zone",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v4/products/zones/:XXX"
+    ],
+    "isStream": false
+  },
+  {
+    "className": "ListZoneCommand",
+    "category": "zone",
+    "importSubpath": "zone/list-zone-command.js",
+    "description": "List zone",
+    "params": {},
+    "requiredParams": [],
+    "endpoints": [
+      "[GET] /v4/products/zones"
+    ],
+    "isStream": false
+  }
+]

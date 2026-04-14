@@ -1,0 +1,38 @@
+{
+  "name": "mcp-simple-server",
+  "version": "0.1.0",
+  "description": "Code Mode MCP server for Clever Cloud — exposes the full Clever Cloud API and documentation through three tools (search, execute, doc) using the @clevercloud/client command pattern",
+  "type": "module",
+  "license": "Apache-2.0",
+  "author": "Clever Cloud",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CleverCloud/mcp-simple-server"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "mcp-simple-server": "./dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "src/catalog/command-catalog.json"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "generate-catalog": "tsx scripts/generate-catalog.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@clevercloud/client": "^12.0.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
