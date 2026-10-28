@@ -32,7 +32,7 @@ async function main() {
   const textResult = createTextResult(config);
   registerSearchTool(server, textResult);
   registerExecuteTool(server, textResult, client, config);
-  await registerDocTool(server, textResult);
+  registerDocTool(server, textResult, config);
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
