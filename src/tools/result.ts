@@ -1,3 +1,5 @@
+import { inspect, type InspectOptions } from "node:util";
+
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
 import type { Config } from "../config.ts";
@@ -29,4 +31,24 @@ function truncate(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
   const notice = `\n\n... (truncated to the ${maxLength} characters output budget)`;
   return `${text.slice(0, Math.max(0, maxLength - notice.length))}${notice}`.slice(0, maxLength);
+}
+
+// Values to render may be huge, cyclic, or come with getters and custom
+// inspectors that run code: none of them runs, and the output stays bounded
+export const INSPECT_OPTIONS: InspectOptions = {
+  depth: 6,
+  maxArrayLength: 200,
+  maxStringLength: 10_000,
+  breakLength: 120,
+  customInspect: false,
+  getters: false,
+};
+
+/** Renders any value with the bounded options, never throwing */
+export function inspectSafely(value: unknown): string {
+  try {
+    return inspect(value, INSPECT_OPTIONS);
+  } catch {
+    return "(cannot be rendered)";
+  }
 }

@@ -30,13 +30,17 @@ test("the built server starts and serves its tools over stdio", { timeout: 30_00
     await client.close();
     rmSync(cacheDir, { recursive: true, force: true });
   });
-  await client.connect(
-    new StdioClientTransport({
-      command: process.execPath,
-      args: ["dist/index.js"],
-      env: { CLEVER_CLOUD_API_TOKEN: "test-token", XDG_CACHE_HOME: cacheDir },
-    }),
-  );
+  const transport = new StdioClientTransport({
+    command: process.execPath,
+    args: ["dist/index.js"],
+    env: { CLEVER_CLOUD_API_TOKEN: "test-token", XDG_CACHE_HOME: cacheDir },
+    stderr: "pipe",
+  });
+  let stderr = "";
+  transport.stderr?.on("data", (chunk) => {
+    stderr += chunk;
+  });
+  await client.connect(transport);
 
   const { tools } = await client.listTools();
   const readOnly = Object.fromEntries(tools.map((tool) => [tool.name, tool.annotations?.readOnlyHint]));
@@ -44,4 +48,13 @@ test("the built server starts and serves its tools over stdio", { timeout: 30_00
 
   const result = await client.callTool({ name: "search", arguments: { query: "list application" } });
   assert.match(JSON.stringify(result.content), /ListApplicationCommand/);
+
+  // A promise the executed code leaves rejected must not stop the server
+  await client.callTool({
+    name: "execute",
+    arguments: { code: 'Promise.reject(new Error("left behind")); return 1;' },
+  });
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  assert.equal((await client.listTools()).tools.length, 3);
+  assert.match(stderr, /Ignored unhandled rejection: Error: left behind/);
 });
