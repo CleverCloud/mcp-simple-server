@@ -1,19 +1,18 @@
 #!/usr/bin/env node
 
 import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
-import { createClient } from "./client/create-client.js";
-import { getConfig } from "./config.js";
-import { registerDocTool } from "./tools/doc.js";
-import { registerExecuteTool } from "./tools/execute.js";
-import { registerSearchTool } from "./tools/search.js";
+import { createClient } from "./client/create-client.ts";
+import { getConfig } from "./config.ts";
+import { registerDocTool } from "./tools/doc.ts";
+import { registerExecuteTool } from "./tools/execute.ts";
+import { registerSearchTool } from "./tools/search.ts";
 
-const pkgPath = join(dirname(fileURLToPath(import.meta.url)), "../package.json");
+const pkgPath = join(import.meta.dirname, "../package.json");
 const { name, version } = JSON.parse(readFileSync(pkgPath, "utf-8"));
 
 async function main() {

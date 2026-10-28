@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { CatalogEntry } from "../src/catalog/catalog.js";
+import type { CatalogEntry } from "../src/catalog/catalog.ts";
 
 const CLIENT_PKG_DIR = path.resolve("node_modules/@clevercloud/client");
 // Since 12.6, the package only ships dist/, with .d.ts next to the compiled .js
@@ -65,14 +65,14 @@ function extractCommands(source: string): ExtractedCommand[] {
   let match;
 
   while ((match = classRe.exec(source)) !== null) {
-    const { comment, name, base } = match.groups!;
+    const { comment, name, base } = match.groups as Record<"comment" | "name" | "base", string>;
     if (name.includes("Inner")) continue;
 
     const endpoints: string[] = [];
     const endpointRe = /@endpoint\s+(\[.+?\].*)/g;
     let epMatch;
     while ((epMatch = endpointRe.exec(comment)) !== null) {
-      endpoints.push(epMatch[1].trim());
+      endpoints.push(epMatch[1]!.trim());
     }
 
     results.push({
@@ -108,7 +108,7 @@ function parseTypesFile(
   }
 
   const extendsClause = match[1]?.trim();
-  const body = match[2];
+  const body = match[2]!;
 
   // Resolve extended base types
   if (extendsClause) {
@@ -131,9 +131,9 @@ function parseTypesFile(
   const propRe = /(\w+)(\??):\s*([^;]+);/g;
   let propMatch;
   while ((propMatch = propRe.exec(body)) !== null) {
-    const propName = propMatch[1];
+    const propName = propMatch[1]!;
     const optional = propMatch[2] === "?";
-    let propType = propMatch[3].trim();
+    let propType = propMatch[3]!.trim();
 
     // Simplify complex types for the catalog
     propType = simplifyType(propType);

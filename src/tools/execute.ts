@@ -2,9 +2,9 @@ import type { CcApiClient } from "@clevercloud/client/cc-api-client.js";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
-import { commands } from "../commands/command-registry.js";
-import type { Config } from "../config.js";
-import { textResult } from "./result.js";
+import { commands } from "../commands/command-registry.ts";
+import type { Config } from "../config.ts";
+import { textResult } from "./result.ts";
 
 export function registerExecuteTool(
   server: McpServer,

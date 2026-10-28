@@ -1,7 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
-import { textResult } from "./result.js";
+import { textResult } from "./result.ts";
 
 const LLMS_TXT_URL = "https://www.clever.cloud/developers/llms.txt";
 const ALLOWED_HOST = "www.clever.cloud";
@@ -23,7 +23,7 @@ function parseIndex(content: string): DocEntry[] {
   for (const line of content.split("\n")) {
     const categoryMatch = /^##\s+(.+?)\s*$/.exec(line);
     if (categoryMatch) {
-      currentCategory = categoryMatch[1];
+      currentCategory = categoryMatch[1]!;
       continue;
     }
     const linkMatch = /^-\s+\[([^\]]+)\]\((https?:\/\/[^)]+)\)(?::\s*(.*))?$/.exec(
@@ -32,8 +32,8 @@ function parseIndex(content: string): DocEntry[] {
     if (linkMatch) {
       entries.push({
         category: currentCategory,
-        title: linkMatch[1],
-        url: linkMatch[2],
+        title: linkMatch[1]!,
+        url: linkMatch[2]!,
         description: linkMatch[3]?.trim() ?? "",
       });
     }

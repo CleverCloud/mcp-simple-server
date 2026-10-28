@@ -1,10 +1,10 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
-import type { CatalogEntry } from "../catalog/catalog.js";
+import type { CatalogEntry } from "../catalog/catalog.ts";
 // A static import makes tsc emit the JSON into dist/, unlike a runtime readFileSync
 import catalogJson from "../catalog/command-catalog.json" with { type: "json" };
-import { textResult } from "./result.js";
+import { textResult } from "./result.ts";
 
 // The inferred literal union (sparse `params` keys widened to `?: undefined`) isn't
 // comparable to CatalogEntry; the generator guarantees the shape
