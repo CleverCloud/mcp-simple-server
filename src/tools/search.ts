@@ -45,33 +45,33 @@ export function registerSearchTool(server: McpServer): void {
         );
       }
 
-      const formatted = matches.map((entry) => {
-        const paramLines = Object.entries(entry.params).map(
-          ([name, type]) => {
-            const required = entry.requiredParams.includes(name);
-            return `    ${name}${required ? "" : "?"}: ${type}`;
-          },
-        );
-
-        const lines = [
-          `## ${entry.className}`,
-          `Category: ${entry.category} | ${entry.description}`,
-          entry.endpoints.length > 0
-            ? `Endpoints: ${entry.endpoints.join(", ")}`
-            : null,
-          entry.isStream ? `**Stream command** — use client.stream() instead of client.send()` : null,
-          paramLines.length > 0
-            ? `Parameters:\n${paramLines.join("\n")}`
-            : `Parameters: none`,
-          `Usage: ${entry.isStream ? "client.stream" : "await client.send"}(new commands.${entry.className}(${paramLines.length > 0 ? "{ ... }" : ""}))`,
-        ];
-
-        return lines.filter(Boolean).join("\n");
-      });
-
       return textResult(
-        `Found ${matches.length} command(s):\n\n${formatted.join("\n\n---\n\n")}`,
+        `Found ${matches.length} command(s):\n\n${matches.map(formatCommand).join("\n\n---\n\n")}`,
       );
     },
   );
+}
+
+function formatCommand(entry: CatalogEntry): string {
+  const params = Object.entries(entry.params).map(([name, { type, required, description }]) => {
+    const summary = description ? ` — ${description}` : "";
+    return `  ${name}${required ? "" : "?"}: ${type}${summary}`;
+  });
+  const types = Object.entries(entry.types ?? {}).map(([name, definition]) => `  ${name} = ${definition}`);
+  const args = params.length > 0 ? "{ ... }" : "";
+
+  return [
+    `## ${entry.className}`,
+    entry.description,
+    `Category: ${entry.category} | Endpoints: ${entry.endpoints.join(", ")}`,
+    params.length > 0 ? `Parameters:\n${params.join("\n")}` : "Parameters: none",
+    entry.requiredAnyOf &&
+      `Also required, at least one of: ${entry.requiredAnyOf.map((set) => `(${set.join(", ")})`).join(" | ")}`,
+    types.length > 0 && `Types:\n${types.join("\n")}`,
+    entry.isStream
+      ? `Usage: const stream = await client.stream(new commands.${entry.className}(${args})) — see the execute tool for how to consume a stream`
+      : `Usage: await client.send(new commands.${entry.className}(${args}))`,
+  ]
+    .filter(Boolean)
+    .join("\n");
 }

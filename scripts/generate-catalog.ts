@@ -1,240 +1,313 @@
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
-import type { CatalogEntry } from "../src/catalog/catalog.ts";
 
-const CLIENT_PKG_DIR = path.resolve("node_modules/@clevercloud/client");
-// Since 12.6, the package only ships dist/, with .d.ts next to the compiled .js
-const COMMANDS_DIR = path.join(
-  CLIENT_PKG_DIR,
-  "dist/src/clients/cc-api/commands",
-);
+import { API, NodeBuilderFlags, SignatureKind, SymbolFlags, TypeFlags } from "typescript/unstable/sync";
+import type { Project, Symbol, Type, TypeReference } from "typescript/unstable/sync";
+
+import type { CatalogEntry, CatalogParam } from "../src/catalog/catalog.ts";
+
+const COMMANDS_DIR = path.resolve("node_modules/@clevercloud/client/dist/src/clients/cc-api/commands");
 const CATALOG_OUT = path.resolve("src/catalog/command-catalog.json");
 const REGISTRY_OUT = path.resolve("src/commands/command-registry.ts");
 
-// Known base types that command inputs extend via `extends`
-const BASE_TYPES: Record<string, Record<string, { type: string; required: boolean }>> = {
-  ApplicationId: {
-    applicationId: { type: "string", required: true },
-    ownerId: { type: "string", required: false },
-  },
-  AddonId: {
-    addonId: { type: "string", required: true },
-    ownerId: { type: "string", required: false },
-  },
-  AddonProviderId: {
-    addonProviderId: { type: "string", required: true },
-    ownerId: { type: "string", required: false },
-  },
-  OauthConsumerKey: {
-    oauthConsumerKey: { type: "string", required: true },
-    ownerId: { type: "string", required: false },
-  },
-  ApplicationOrAddonId: {
-    applicationId: { type: "string", required: false },
-    addonId: { type: "string", required: false },
-    ownerId: { type: "string", required: false },
-  },
-};
-
-function classNameToDescription(className: string): string {
-  // Remove "Command" suffix, split PascalCase
-  const withoutCommand = className.replace(/Command$/, "");
-  const words = withoutCommand.replace(/([a-z])([A-Z])/g, "$1 $2");
-  return words.charAt(0).toUpperCase() + words.slice(1).toLowerCase();
+export interface GeneratedCommand {
+  entry: CatalogEntry;
+  /** Path of the command's module, relative to the commands directory */
+  modulePath: string;
 }
 
-interface ExtractedCommand {
-  className: string;
-  endpoints: string[];
-  isStream: boolean;
+interface NamedType {
+  symbolId: number;
+  /** The name, with its type parameters if any */
+  label: string;
+  definition: string;
 }
 
 /**
- * Extracts all exported command classes from a source file,
- * each with its own endpoints and stream flag.
+ * Builds the catalog from the client's type declarations. Command inputs are
+ * declared as interfaces, aliases, unions, intersections and generics, so they
+ * are resolved by the TypeScript checker rather than parsed by hand.
  *
- * The @endpoint JSDoc tags that precede each class declaration
- * are associated with that specific class, not the whole file.
+ * @param commandsDir holds one directory per category, of `*-command.d.ts` files
  */
-function extractCommands(source: string): ExtractedCommand[] {
-  const results: ExtractedCommand[] = [];
+export function buildCatalog(commandsDir: string): GeneratedCommand[] {
+  const modulePaths = fs
+    .readdirSync(commandsDir)
+    .sort()
+    .flatMap((category) =>
+      fs
+        .readdirSync(path.join(commandsDir, category))
+        .filter((file) => file.endsWith("-command.d.ts") && !file.startsWith("abstract-"))
+        .sort()
+        .map((file) => `${category}/${file}`),
+    );
 
-  // Split source into segments: each class gets the comment block above it
-  const classRe =
-    /(?<comment>(?:\/\*\*[\s\S]*?\*\/\s*)*?)export\s+class\s+(?<name>\w+Command)\s+extends\s+(?<base>\w+)/g;
-  let match;
+  return withProject(
+    modulePaths.map((modulePath) => path.join(commandsDir, modulePath)),
+    (project) => {
+      const { program, checker } = project;
+      const commands: GeneratedCommand[] = [];
+      for (const modulePath of modulePaths) {
+        const file = path.join(commandsDir, modulePath);
+        const sourceFile = program.getSourceFile(file);
+        const moduleSymbol = sourceFile && checker.getSymbolAtLocation(sourceFile);
+        if (!moduleSymbol) throw new Error(`Cannot load ${file}`);
 
-  while ((match = classRe.exec(source)) !== null) {
-    const { comment, name, base } = match.groups as Record<"comment" | "name" | "base", string>;
-    if (name.includes("Inner")) continue;
+        const commandSymbols = checker
+          .getExportsOfModule(moduleSymbol)
+          .filter(
+            (symbol) =>
+              symbol.flags & SymbolFlags.Class &&
+              symbol.name.endsWith("Command") &&
+              !symbol.name.includes("Inner") &&
+              !isAbstract(project, symbol),
+          );
+        if (commandSymbols.length === 0) throw new Error(`No command class exported by ${file}`);
 
-    const endpoints: string[] = [];
-    const endpointRe = /@endpoint\s+(\[.+?\].*)/g;
-    let epMatch;
-    while ((epMatch = endpointRe.exec(comment)) !== null) {
-      endpoints.push(epMatch[1]!.trim());
-    }
-
-    results.push({
-      className: name,
-      endpoints,
-      isStream: /Stream/i.test(base),
-    });
-  }
-
-  return results;
-}
-
-function parseTypesFile(
-  typesContent: string,
-  className: string,
-): { params: Record<string, string>; requiredParams: string[] } {
-  const params: Record<string, string> = {};
-  const requiredParams: string[] = [];
-
-  // Find the CommandInput interface for this class
-  const inputName = `${className}Input`;
-
-  // Match: interface XxxCommandInput { ... } or interface XxxCommandInput extends BaseType { ... }
-  const interfaceRe = new RegExp(
-    `interface\\s+${inputName}(?:\\s+extends\\s+([\\w,\\s]+))?\\s*\\{([^}]*)\\}`,
-    "s",
-  );
-  const match = interfaceRe.exec(typesContent);
-
-  if (!match) {
-    // No input interface found — command takes no params
-    return { params, requiredParams };
-  }
-
-  const extendsClause = match[1]?.trim();
-  const body = match[2]!;
-
-  // Resolve extended base types
-  if (extendsClause) {
-    const baseNames = extendsClause.split(",").map((s) => s.trim());
-    for (const baseName of baseNames) {
-      // Handle Omit<BaseType, 'field'> — skip these (internal commands)
-      if (baseName.startsWith("Omit")) continue;
-
-      const baseParams = BASE_TYPES[baseName];
-      if (baseParams) {
-        for (const [name, info] of Object.entries(baseParams)) {
-          params[name] = info.type;
-          if (info.required) requiredParams.push(name);
+        const [category] = modulePath.split("/");
+        for (const symbol of commandSymbols) {
+          if (commands.some(({ entry }) => entry.className === symbol.name)) {
+            throw new Error(`${symbol.name} is exported by several modules`);
+          }
+          try {
+            commands.push({
+              entry: describeCommand(project, symbol, category!),
+              modulePath: modulePath.replace(/\.d\.ts$/, ".js"),
+            });
+          } catch (error) {
+            throw new Error(`${symbol.name}: ${(error as Error).message}`, { cause: error });
+          }
         }
       }
-    }
-  }
 
-  // Parse properties from the interface body
-  const propRe = /(\w+)(\??):\s*([^;]+);/g;
-  let propMatch;
-  while ((propMatch = propRe.exec(body)) !== null) {
-    const propName = propMatch[1]!;
-    const optional = propMatch[2] === "?";
-    let propType = propMatch[3]!.trim();
-
-    // Simplify complex types for the catalog
-    propType = simplifyType(propType);
-
-    params[propName] = propType;
-    if (!optional) {
-      requiredParams.push(propName);
-    }
-  }
-
-  return { params, requiredParams };
+      const truncated = JSON.stringify(commands).match(/\.\.\. \d+ more \.\.\./);
+      if (truncated) throw new Error(`A type was rendered truncated: "${truncated[0]}"`);
+      return commands;
+    },
+  );
 }
 
-function simplifyType(type: string): string {
-  // Array<X> -> X[]
-  type = type.replace(/Array<(\w+)>/g, "$1[]");
-  // Remove inline union types that are too verbose
-  if (type.includes("|") && type.length > 40) {
-    return "string";
+function withProject<T>(files: string[], use: (project: Project) => T): T {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "generate-catalog-"));
+  let api: API | undefined;
+  try {
+    const tsconfig = path.join(tmpDir, "tsconfig.json");
+    fs.writeFileSync(
+      tsconfig,
+      JSON.stringify({ compilerOptions: { module: "nodenext", strict: true, types: [] }, files }),
+    );
+    api = new API({ cwd: tmpDir });
+    const project = api.updateSnapshot({ openProjects: [tsconfig] }).getProject(tsconfig);
+    if (!project) throw new Error("Cannot open the TypeScript project of the client declarations");
+    return use(project);
+  } finally {
+    api?.close();
+    fs.rmSync(tmpDir, { recursive: true, force: true });
   }
-  // Date | string | number -> string
-  if (type === "Date | string | number") return "string | number";
-  return type;
+}
+
+function isAbstract({ checker }: Project, classSymbol: Symbol): boolean {
+  const constructorType = checker.getTypeOfSymbol(classSymbol);
+  return (
+    constructorType !== undefined &&
+    checker.getSignaturesOfType(constructorType, SignatureKind.Construct).some((signature) => signature.isAbstract)
+  );
+}
+
+function describeCommand(project: Project, symbol: Symbol, category: string): CatalogEntry {
+  const { checker } = project;
+  // The input type is the first type argument of the base command class, or the
+  // constraint of the class's own type parameter when it forwards one
+  const classType = checker.getDeclaredTypeOfSymbol(symbol);
+  const [baseType] = classType.isClassOrInterface() ? checker.getBaseTypes(classType) : [];
+  const [inputArgument] = baseType ? checker.getTypeArguments(baseType as TypeReference) : [];
+  const inputType = inputArgument?.isTypeParameter()
+    ? checker.getConstraintOfTypeParameter(inputArgument)
+    : inputArgument;
+  if (!baseType || !inputType) throw new Error("Cannot find the input type");
+
+  return {
+    className: symbol.name,
+    category,
+    // The first paragraph is the summary, the next ones are details
+    description: normalize(symbol.getDocumentationComment(checker).split(/\n\s*\n/)[0]),
+    endpoints: symbol
+      .getJsDocTags(checker)
+      .filter((tag) => tag.name === "endpoint")
+      .map((tag) => normalize(tag.text)),
+    isStream: /Stream/.test(baseType.getSymbol()?.name ?? ""),
+    ...describeInput(project, inputType),
+  };
+}
+
+function describeInput(
+  project: Project,
+  inputType: Type,
+): Pick<CatalogEntry, "params" | "requiredAnyOf" | "types"> {
+  const { checker } = project;
+  if (inputType.isErrorType()) throw new Error("The input type cannot be resolved");
+
+  // A union only exposes its common properties: describe every variant instead.
+  // A `void` variant means the command can also be called without params.
+  const variants = inputType.isUnionType() ? (inputType.getTypes() ?? []) : [inputType];
+  const isVoid = (type: Type) => (type.flags & (TypeFlags.Void | TypeFlags.Undefined)) !== 0;
+  const objectVariants = variants.filter((variant) => !isVoid(variant));
+  const callableWithoutParams = objectVariants.length < variants.length;
+  for (const variant of objectVariants) {
+    if (!variant.isObjectType() && !variant.isIntersectionType()) {
+      throw new Error(`Unsupported input type: ${checker.typeToString(variant)}`);
+    }
+  }
+
+  const found = new Map<string, { types: Set<string>; descriptions: Set<string> }>();
+  const types = new Map<string, NamedType>();
+  const requiredByVariant = objectVariants.map((variant) => {
+    const required = new Set<string>();
+    for (const prop of checker.getPropertiesOfType(variant)) {
+      if (!isOptional(prop)) required.add(prop.name);
+
+      const param = found.get(prop.name) ?? { types: new Set(), descriptions: new Set() };
+      found.set(prop.name, param);
+      const rendered = renderPropType(project, prop);
+      param.types.add(rendered);
+      const description = normalize(prop.getDocumentationComment(checker));
+      if (description) param.descriptions.add(description);
+
+      defineNamedTypes(project, rendered, declarationFile(prop), types);
+    }
+    return required;
+  });
+
+  const commonRequired = callableWithoutParams
+    ? new Set<string>()
+    : requiredByVariant.reduce((common, required) => common.intersection(required));
+  const params: Record<string, CatalogParam> = {};
+  for (const [name, param] of found) {
+    params[name] = {
+      type: [...param.types].join(" | "),
+      required: commonRequired.has(name),
+      ...(param.descriptions.size > 0 && { description: [...param.descriptions].join(" / ") }),
+    };
+  }
+
+  const requiredAnyOf = callableWithoutParams
+    ? []
+    : minimalSets(requiredByVariant.map((required) => required.difference(commonRequired)));
+  return {
+    params,
+    ...(requiredAnyOf.length > 0 && { requiredAnyOf: requiredAnyOf.map((set) => [...set]) }),
+    ...(types.size > 0 && {
+      types: Object.fromEntries([...types.values()].map(({ label, definition }) => [label, definition])),
+    }),
+  };
+}
+
+/**
+ * Reduces the param sets the variants require on top of the common ones to the
+ * minimal alternatives. None is left when a variant requires nothing more.
+ */
+function minimalSets(sets: Set<string>[]): Set<string>[] {
+  if (sets.some((set) => set.size === 0)) return [];
+  const minimal: Set<string>[] = [];
+  for (const set of sets.toSorted((a, b) => a.size - b.size)) {
+    if (!minimal.some((kept) => kept.isSubsetOf(set))) minimal.push(set);
+  }
+  return minimal;
+}
+
+/**
+ * Adds to `types` the definitions of the PascalCase type names a rendered type
+ * mentions, then of the names those definitions mention, and so on. Names are
+ * resolved from the file the rendered type comes from; the TypeScript lib
+ * types, like `Record`, are left out.
+ */
+function defineNamedTypes(project: Project, rendered: string, file: string, types: Map<string, NamedType>): void {
+  const { program, checker } = project;
+  const withoutStringLiterals = rendered.replace(/"(?:[^"\\]|\\.)*"/g, "");
+  for (const [name] of withoutStringLiterals.matchAll(/\b[A-Z]\w*/g)) {
+    const symbol = checker.resolveName(name, SymbolFlags.Type, { document: file, position: 0 });
+    const declared = symbol && symbol.flags & SymbolFlags.Alias ? checker.getAliasedSymbol(symbol) : symbol;
+    const isLibType = declared?.declarations.some(
+      (declaration) => program.getSourceFileMetadataByPath(declaration.path)?.isDefaultLibrary,
+    );
+    if (!declared || isLibType) continue;
+
+    const known = types.get(name);
+    if (known) {
+      if (known.symbolId !== declared.id) throw new Error(`Two different types are named ${name}`);
+      continue;
+    }
+
+    const type = checker.getDeclaredTypeOfSymbol(declared);
+    const isAlias = (declared.flags & SymbolFlags.TypeAlias) !== 0;
+    const typeParameters = isAlias
+      ? type.getAliasTypeArguments()
+      : type.isClassOrInterface()
+        ? type.getTypeParameters()
+        : [];
+    const definition = isAlias
+      ? checker.typeToString(type, undefined, NodeBuilderFlags.NoTruncation | NodeBuilderFlags.InTypeAlias)
+      : `{ ${checker
+          .getPropertiesOfType(type)
+          .map((prop) => `${prop.name}${isOptional(prop) ? "?" : ""}: ${renderPropType(project, prop)};`)
+          .join(" ")} }`;
+    types.set(name, {
+      symbolId: declared.id,
+      label: typeParameters.length > 0
+        ? `${name}<${typeParameters.map((parameter) => checker.typeToString(parameter)).join(", ")}>`
+        : name,
+      definition,
+    });
+    defineNamedTypes(project, definition, declarationFile(declared), types);
+  }
+}
+
+/** Renders the type of a property; when optional, its `| undefined` is left out */
+function renderPropType({ checker }: Project, prop: Symbol): string {
+  const type = checker.getTypeOfSymbol(prop);
+  if (!type || type.isErrorType()) throw new Error(`The type of ${prop.name} cannot be resolved`);
+  const rendered = checker.typeToString(type, undefined, NodeBuilderFlags.NoTruncation);
+  return isOptional(prop) ? rendered.replace(/ \| undefined$/, "") : rendered;
+}
+
+function isOptional(prop: Symbol): boolean {
+  return (prop.flags & SymbolFlags.Optional) !== 0;
+}
+
+function declarationFile(symbol: Symbol): string {
+  const [declaration] = symbol.declarations;
+  if (!declaration) throw new Error(`${symbol.name} has no declaration`);
+  return declaration.path;
+}
+
+function normalize(text: string | undefined): string {
+  return (text ?? "").replace(/\s+/g, " ").trim();
 }
 
 function main() {
-  const catalog: CatalogEntry[] = [];
-  const registryImports: string[] = [];
-  const registryEntries: string[] = [];
-  const seenClassNames = new Set<string>();
+  const commands = buildCatalog(COMMANDS_DIR);
 
-  const categories = fs.readdirSync(COMMANDS_DIR).sort();
+  const catalog = commands.map(({ entry }) => entry);
+  fs.writeFileSync(CATALOG_OUT, `${JSON.stringify(catalog, null, 2)}\n`);
+  console.log(`Generated catalog: ${commands.length} commands -> ${CATALOG_OUT}`);
 
-  for (const category of categories) {
-    const categoryDir = path.join(COMMANDS_DIR, category);
-    if (!fs.statSync(categoryDir).isDirectory()) continue;
+  const imports = commands.map(
+    ({ entry, modulePath }) =>
+      `import { ${entry.className} } from "@clevercloud/client/cc-api-commands/${modulePath}";`,
+  );
+  const entries = commands.map(({ entry }) => `  ${entry.className},`);
+  fs.writeFileSync(
+    REGISTRY_OUT,
+    `// Generated by scripts/generate-catalog.ts — do not edit manually
+${imports.join("\n")}
 
-    const files = fs
-      .readdirSync(categoryDir)
-      .filter((f) => f.endsWith("-command.js") && !f.startsWith("abstract"))
-      .sort();
-
-    for (const file of files) {
-      const source = fs.readFileSync(path.join(categoryDir, file), "utf-8");
-      const extracted = extractCommands(source);
-
-      if (extracted.length === 0) continue;
-
-      // Try to read the types file (shared across all classes in the file)
-      const typesFile = file.replace(".js", ".types.d.ts");
-      const typesPath = path.join(COMMANDS_DIR, category, typesFile);
-      const typesContent = fs.existsSync(typesPath)
-        ? fs.readFileSync(typesPath, "utf-8")
-        : null;
-
-      for (const { className, endpoints, isStream } of extracted) {
-        if (seenClassNames.has(className)) continue;
-        seenClassNames.add(className);
-
-        const { params, requiredParams } = typesContent
-          ? parseTypesFile(typesContent, className)
-          : { params: {} as Record<string, string>, requiredParams: [] as string[] };
-
-        const importSubpath = `${category}/${file}`;
-
-        catalog.push({
-          className,
-          category,
-          importSubpath,
-          description: classNameToDescription(className),
-          params,
-          requiredParams,
-          endpoints,
-          isStream,
-        });
-
-        registryImports.push(
-          `import { ${className} } from "@clevercloud/client/cc-api-commands/${importSubpath}";`,
-        );
-        registryEntries.push(`  ${className},`);
-      }
-    }
-  }
-
-  // Write catalog JSON
-  fs.mkdirSync(path.dirname(CATALOG_OUT), { recursive: true });
-  fs.writeFileSync(CATALOG_OUT, JSON.stringify(catalog, null, 2) + "\n");
-  console.log(`Generated catalog: ${catalog.length} commands -> ${CATALOG_OUT}`);
-
-  // Write command registry
-  fs.mkdirSync(path.dirname(REGISTRY_OUT), { recursive: true });
-  const registryContent = `// Generated by scripts/generate-catalog.ts — do not edit manually
-${registryImports.join("\n")}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const commands: Record<string, new (params?: any) => any> = {
-${registryEntries.join("\n")}
+${entries.join("\n")}
 };
-`;
-  fs.writeFileSync(REGISTRY_OUT, registryContent);
-  console.log(`Generated registry: ${registryEntries.length} commands -> ${REGISTRY_OUT}`);
+`,
+  );
+  console.log(`Generated registry: ${commands.length} commands -> ${REGISTRY_OUT}`);
 }
 
-main();
+if (import.meta.main) main();

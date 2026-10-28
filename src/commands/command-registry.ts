@@ -245,7 +245,6 @@ import { GetWarpTokenCommand } from "@clevercloud/client/cc-api-commands/warp-to
 import { GetZoneCommand } from "@clevercloud/client/cc-api-commands/zone/get-zone-command.js";
 import { ListZoneCommand } from "@clevercloud/client/cc-api-commands/zone/list-zone-command.js";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const commands: Record<string, new (params?: any) => any> = {
   CreateAddonCommand,
   DeleteAddonCommand,
