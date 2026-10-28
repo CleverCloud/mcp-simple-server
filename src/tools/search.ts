@@ -12,15 +12,20 @@ const catalog = catalogJson as unknown as CatalogEntry[];
 const categories = [...new Set(catalog.map((e) => e.category))];
 
 export function registerSearchTool(server: McpServer): void {
-  server.tool(
+  server.registerTool(
     "search",
-    "Search available Clever Cloud API commands. Returns matching commands with their class name, category, parameters, and usage. Use this to discover which commands exist before writing code for the execute tool.",
     {
-      query: z
-        .string()
-        .describe(
-          'Search query: matches against command name, category, description, endpoint paths, and parameter names. Examples: "application", "create addon", "deploy", "environment variable", "network-group", "domain"',
-        ),
+      title: "Search Clever Cloud API commands",
+      description:
+        "Search available Clever Cloud API commands. Returns matching commands with their class name, category, parameters, and usage. Use this to discover which commands exist before writing code for the execute tool.",
+      inputSchema: {
+        query: z
+          .string()
+          .describe(
+            'Search query: matches against command name, category, description, endpoint paths, and parameter names. Examples: "application", "create addon", "deploy", "environment variable", "network-group", "domain"',
+          ),
+      },
+      annotations: { readOnlyHint: true, openWorldHint: false },
     },
     async ({ query }) => {
       const terms = query.toLowerCase().split(/\s+/).filter(Boolean);

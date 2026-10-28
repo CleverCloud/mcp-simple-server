@@ -67,9 +67,11 @@ export async function registerDocTool(server: McpServer): Promise<void> {
   }
   const categories = [...new Set(index.map((e) => e.category))];
 
-  server.tool(
+  server.registerTool(
     "doc",
-    `Search or fetch Clever Cloud documentation pages.
+    {
+      title: "Search and read the Clever Cloud documentation",
+      description: `Search or fetch Clever Cloud documentation pages.
 
 Two modes (provide exactly one):
 - query: search the documentation index (titles, categories, URLs) and return matching pages
@@ -77,21 +79,23 @@ Two modes (provide exactly one):
 
 Use 'query' first to discover pages, then 'url' to read one in full. URLs must point to ${ALLOWED_HOST}.
 The documentation covers concepts, runtimes, add-ons, CLI, deployment, and reference material that the command catalog doesn't expose.`,
-    {
-      query: z
-        .string()
-        .min(1)
-        .optional()
-        .describe(
-          'Keywords to search in page titles, descriptions, and categories. Examples: "environment variables", "postgresql", "deploy nodejs"',
-        ),
-      url: z
-        .string()
-        .url()
-        .optional()
-        .describe(
-          `Full URL of a Clever Cloud documentation page (must be on ${ALLOWED_HOST}). Returns the page's markdown content.`,
-        ),
+      inputSchema: {
+        query: z
+          .string()
+          .min(1)
+          .optional()
+          .describe(
+            'Keywords to search in page titles, descriptions, and categories. Examples: "environment variables", "postgresql", "deploy nodejs"',
+          ),
+        url: z
+          .string()
+          .url()
+          .optional()
+          .describe(
+            `Full URL of a Clever Cloud documentation page (must be on ${ALLOWED_HOST}). Returns the page's markdown content.`,
+          ),
+      },
+      annotations: { readOnlyHint: true, openWorldHint: true },
     },
     async ({ query, url }) => {
       if ((query == null) === (url == null)) {

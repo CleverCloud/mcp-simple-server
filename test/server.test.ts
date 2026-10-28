@@ -39,7 +39,8 @@ test("the built server starts and serves its tools over stdio", { timeout: 30_00
   );
 
   const { tools } = await client.listTools();
-  assert.deepEqual(tools.map((tool) => tool.name).sort(), ["doc", "execute", "search"]);
+  const readOnly = Object.fromEntries(tools.map((tool) => [tool.name, tool.annotations?.readOnlyHint]));
+  assert.deepEqual(readOnly, { search: true, execute: false, doc: true });
 
   const result = await client.callTool({ name: "search", arguments: { query: "list application" } });
   assert.match(JSON.stringify(result.content), /ListApplicationCommand/);

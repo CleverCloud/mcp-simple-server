@@ -13,9 +13,11 @@ export function registerExecuteTool(
 ): void {
   const timeoutSec = Math.round(config.executionTimeoutMs / 1000);
 
-  server.tool(
+  server.registerTool(
     "execute",
-    `Execute JavaScript code against the Clever Cloud API using a pre-authenticated client.
+    {
+      title: "Run code against the Clever Cloud API",
+      description: `Execute JavaScript code against the Clever Cloud API using a pre-authenticated client.
 
 Available in scope:
 - client: CcApiClient instance (pre-authenticated with API token)
@@ -33,12 +35,15 @@ Notes:
 - For stream commands, use client.stream() instead of client.send().
 - Use the search tool first to discover available commands and their parameters.
 - Timeout: ${timeoutSec}s.`,
-    {
-      code: z
-        .string()
-        .describe(
-          "JavaScript code to execute. Runs as an async function body with client and commands in scope. Use 'return' to return a result.",
-        ),
+      inputSchema: {
+        code: z
+          .string()
+          .describe(
+            "JavaScript code to execute. Runs as an async function body with client and commands in scope. Use 'return' to return a result.",
+          ),
+      },
+      // The code can call any API command, including destructive ones
+      annotations: { readOnlyHint: false, destructiveHint: true, openWorldHint: true },
     },
     async ({ code }) => {
       const logs: string[] = [];
