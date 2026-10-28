@@ -1,18 +1,14 @@
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
 import type { CatalogEntry } from "../catalog/catalog.js";
+// A static import makes tsc emit the JSON into dist/, unlike a runtime readFileSync
+import catalogJson from "../catalog/command-catalog.json" with { type: "json" };
 import { textResult } from "./result.js";
 
-const catalogPath = join(
-  dirname(fileURLToPath(import.meta.url)),
-  "../catalog/command-catalog.json",
-);
-const catalog: CatalogEntry[] = JSON.parse(readFileSync(catalogPath, "utf-8"));
+// The inferred literal union (sparse `params` keys widened to `?: undefined`) isn't
+// comparable to CatalogEntry; the generator guarantees the shape
+const catalog = catalogJson as unknown as CatalogEntry[];
 const categories = [...new Set(catalog.map((e) => e.category))];
 
 export function registerSearchTool(server: McpServer): void {
