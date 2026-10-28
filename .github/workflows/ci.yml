@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+      - run: npm clean-install
+      - run: npm run check
+      # The catalog generator relies on the unstable TypeScript API: regenerating
+      # on every run catches both a stale catalog and a breaking TypeScript update
+      - name: Check the generated catalog is up to date
+        run: npm run generate-catalog && git diff --exit-code

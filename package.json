@@ -24,6 +24,9 @@
     "prepare": "npm run build",
     "start": "node dist/index.js",
     "typecheck": "tsc",
+    "pretest": "npm run build",
+    "test": "node --test 'test/*.test.ts'",
+    "check": "npm run typecheck && npm test",
     "generate-catalog": "node scripts/generate-catalog.ts"
   },
   "dependencies": {
