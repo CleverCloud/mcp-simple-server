@@ -4,6 +4,7 @@ import { DeleteAddonCommand } from "@clevercloud/client/cc-api-commands/addon/de
 import { GetAddonCommand } from "@clevercloud/client/cc-api-commands/addon/get-addon-command.js";
 import { GetAddonSsoCommand } from "@clevercloud/client/cc-api-commands/addon/get-addon-sso-command.js";
 import { ListAddonCommand } from "@clevercloud/client/cc-api-commands/addon/list-addon-command.js";
+import { ListAddonInstanceCommand } from "@clevercloud/client/cc-api-commands/addon/list-addon-instance-command.js";
 import { UpdateAddonCommand } from "@clevercloud/client/cc-api-commands/addon/update-addon-command.js";
 import { CreateAddonProviderCommand } from "@clevercloud/client/cc-api-commands/addon-provider/create-addon-provider-command.js";
 import { CreateAddonProviderFeatureCommand } from "@clevercloud/client/cc-api-commands/addon-provider/create-addon-provider-feature-command.js";
@@ -24,12 +25,28 @@ import { GetApplicationCommand } from "@clevercloud/client/cc-api-commands/appli
 import { ListApplicationCommand } from "@clevercloud/client/cc-api-commands/application/list-application-command.js";
 import { UndeployApplicationCommand } from "@clevercloud/client/cc-api-commands/application/undeploy-application-command.js";
 import { UpdateApplicationCommand } from "@clevercloud/client/cc-api-commands/application/update-application-command.js";
+import { ListArticleCommand } from "@clevercloud/client/cc-api-commands/article/list-article-command.js";
 import { ConfirmAuthMfaCommand } from "@clevercloud/client/cc-api-commands/auth/confirm-auth-mfa-command.js";
 import { CreateAuthMfaCommand } from "@clevercloud/client/cc-api-commands/auth/create-auth-mfa-command.js";
 import { DeleteAuthMfaCommand } from "@clevercloud/client/cc-api-commands/auth/delete-auth-mfa-command.js";
 import { GetAuthMfaBackupCodesCommand } from "@clevercloud/client/cc-api-commands/auth/get-auth-mfa-backup-codes-command.js";
+import { RequestAuthPasswordResetCommand } from "@clevercloud/client/cc-api-commands/auth/request-auth-password-reset-command.js";
 import { UpdateAuthPasswordCommand } from "@clevercloud/client/cc-api-commands/auth/update-auth-password-command.js";
 import { ListBackupCommand } from "@clevercloud/client/cc-api-commands/backup/list-backup-command.js";
+import { CreateCellarBucketCommand } from "@clevercloud/client/cc-api-commands/cellar/create-cellar-bucket-command.js";
+import { DeleteCellarBucketCommand } from "@clevercloud/client/cc-api-commands/cellar/delete-cellar-bucket-command.js";
+import { DeleteCellarObjectCommand } from "@clevercloud/client/cc-api-commands/cellar/delete-cellar-object-command.js";
+import { GetCellarBucketCommand } from "@clevercloud/client/cc-api-commands/cellar/get-cellar-bucket-command.js";
+import { GetCellarCredentialsCommand } from "@clevercloud/client/cc-api-commands/cellar/get-cellar-credentials-command.js";
+import { GetCellarCredentialsPresignedUrlCommand } from "@clevercloud/client/cc-api-commands/cellar/get-cellar-credentials-presigned-url-command.js";
+import { GetCellarInfoCommand } from "@clevercloud/client/cc-api-commands/cellar/get-cellar-info-command.js";
+import { GetCellarObjectCommand } from "@clevercloud/client/cc-api-commands/cellar/get-cellar-object-command.js";
+import { GetCellarObjectDownloadUrlCommand } from "@clevercloud/client/cc-api-commands/cellar/get-cellar-object-download-url-command.js";
+import { GetCellarObjectUploadUrlCommand } from "@clevercloud/client/cc-api-commands/cellar/get-cellar-object-upload-url-command.js";
+import { ListCellarBucketCommand } from "@clevercloud/client/cc-api-commands/cellar/list-cellar-bucket-command.js";
+import { ListCellarObjectCommand } from "@clevercloud/client/cc-api-commands/cellar/list-cellar-object-command.js";
+import { RenewCellarCredentialsCommand } from "@clevercloud/client/cc-api-commands/cellar/renew-cellar-credentials-command.js";
+import { UploadCellarObjectCommand } from "@clevercloud/client/cc-api-commands/cellar/upload-cellar-object-command.js";
 import { GetConfigProviderCommand } from "@clevercloud/client/cc-api-commands/config-provider/get-config-provider-command.js";
 import { UpdateConfigProviderCommand } from "@clevercloud/client/cc-api-commands/config-provider/update-config-provider-command.js";
 import { ActivateCouponCommand } from "@clevercloud/client/cc-api-commands/credits/activate-coupon-command.js";
@@ -67,6 +84,35 @@ import { GetInvoicePdfCommand } from "@clevercloud/client/cc-api-commands/invoic
 import { ListInvoiceCommand } from "@clevercloud/client/cc-api-commands/invoice/list-invoice-command.js";
 import { ListUnpaidInvoiceCommand } from "@clevercloud/client/cc-api-commands/invoice/list-unpaid-invoice-command.js";
 import { GetJenkinsInfoCommand } from "@clevercloud/client/cc-api-commands/jenkins/get-jenkins-info-command.js";
+import { CheckKeycloakVersionCommand } from "@clevercloud/client/cc-api-commands/keycloak/check-keycloak-version-command.js";
+import { CreateKeycloakNetworkGroupCommand } from "@clevercloud/client/cc-api-commands/keycloak/create-keycloak-network-group-command.js";
+import { DeleteKeycloakNetworkGroupCommand } from "@clevercloud/client/cc-api-commands/keycloak/delete-keycloak-network-group-command.js";
+import { GetKeycloakInfoCommand } from "@clevercloud/client/cc-api-commands/keycloak/get-keycloak-info-command.js";
+import { RebootKeycloakCommand } from "@clevercloud/client/cc-api-commands/keycloak/reboot-keycloak-command.js";
+import { RebuildKeycloakCommand } from "@clevercloud/client/cc-api-commands/keycloak/rebuild-keycloak-command.js";
+import { UpdateKeycloakVersionCommand } from "@clevercloud/client/cc-api-commands/keycloak/update-keycloak-version-command.js";
+import { AddKubernetesPersistentStorageCommand } from "@clevercloud/client/cc-api-commands/kubernetes/add-kubernetes-persistent-storage-command.js";
+import { CheckKubernetesClusterVersionCommand } from "@clevercloud/client/cc-api-commands/kubernetes/check-kubernetes-cluster-version-command.js";
+import { CreateKubernetesClusterCommand } from "@clevercloud/client/cc-api-commands/kubernetes/create-kubernetes-cluster-command.js";
+import { CreateKubernetesNodeGroupCommand } from "@clevercloud/client/cc-api-commands/kubernetes/create-kubernetes-node-group-command.js";
+import { DeleteKubernetesClusterCommand } from "@clevercloud/client/cc-api-commands/kubernetes/delete-kubernetes-cluster-command.js";
+import { DeleteKubernetesNodeGroupCommand } from "@clevercloud/client/cc-api-commands/kubernetes/delete-kubernetes-node-group-command.js";
+import { GetKubernetesClusterCommand } from "@clevercloud/client/cc-api-commands/kubernetes/get-kubernetes-cluster-command.js";
+import { GetKubernetesKubeconfigCommand } from "@clevercloud/client/cc-api-commands/kubernetes/get-kubernetes-kubeconfig-command.js";
+import { GetKubernetesKubeconfigPresignedUrlCommand } from "@clevercloud/client/cc-api-commands/kubernetes/get-kubernetes-kubeconfig-presigned-url-command.js";
+import { GetKubernetesNodeGroupCommand } from "@clevercloud/client/cc-api-commands/kubernetes/get-kubernetes-node-group-command.js";
+import { GetKubernetesProductCommand } from "@clevercloud/client/cc-api-commands/kubernetes/get-kubernetes-product-command.js";
+import { GetKubernetesQuotaCommand } from "@clevercloud/client/cc-api-commands/kubernetes/get-kubernetes-quota-command.js";
+import { ListKubernetesClusterCommand } from "@clevercloud/client/cc-api-commands/kubernetes/list-kubernetes-cluster-command.js";
+import { ListKubernetesClusterEventCommand } from "@clevercloud/client/cc-api-commands/kubernetes/list-kubernetes-cluster-event-command.js";
+import { ListKubernetesNodeGroupCommand } from "@clevercloud/client/cc-api-commands/kubernetes/list-kubernetes-node-group-command.js";
+import { ListKubernetesUsageCommand } from "@clevercloud/client/cc-api-commands/kubernetes/list-kubernetes-usage-command.js";
+import { RedeployKubernetesClusterCommand } from "@clevercloud/client/cc-api-commands/kubernetes/redeploy-kubernetes-cluster-command.js";
+import { ResumeKubernetesClusterCommand } from "@clevercloud/client/cc-api-commands/kubernetes/resume-kubernetes-cluster-command.js";
+import { ResumeKubernetesNodeGroupCommand } from "@clevercloud/client/cc-api-commands/kubernetes/resume-kubernetes-node-group-command.js";
+import { UpdateKubernetesClusterCommand } from "@clevercloud/client/cc-api-commands/kubernetes/update-kubernetes-cluster-command.js";
+import { UpdateKubernetesClusterVersionCommand } from "@clevercloud/client/cc-api-commands/kubernetes/update-kubernetes-cluster-version-command.js";
+import { UpdateKubernetesNodeGroupCommand } from "@clevercloud/client/cc-api-commands/kubernetes/update-kubernetes-node-group-command.js";
 import { AddLinkCommand } from "@clevercloud/client/cc-api-commands/link/add-link-command.js";
 import { AddApplicationToApplicationLinkCommand } from "@clevercloud/client/cc-api-commands/link/add-link-command.js";
 import { AddApplicationToAddonLinkCommand } from "@clevercloud/client/cc-api-commands/link/add-link-command.js";
@@ -75,19 +121,31 @@ import { RemoveLinkCommand } from "@clevercloud/client/cc-api-commands/link/remo
 import { RemoveApplicationToApplicationLinkCommand } from "@clevercloud/client/cc-api-commands/link/remove-link-command.js";
 import { RemoveApplicationToAddonLinkCommand } from "@clevercloud/client/cc-api-commands/link/remove-link-command.js";
 import { GetLoadBalancerInfoCommand } from "@clevercloud/client/cc-api-commands/load-balancer/get-load-balancer-info-command.js";
-import { ListLogCommand } from "@clevercloud/client/cc-api-commands/log/list-log-command.js";
 import { StreamAddonRuntimeLogCommand } from "@clevercloud/client/cc-api-commands/log/stream-addon-runtime-log-command.js";
 import { StreamApplicationAccessLogCommand } from "@clevercloud/client/cc-api-commands/log/stream-application-access-log-command.js";
 import { StreamApplicationRuntimeLogCommand } from "@clevercloud/client/cc-api-commands/log/stream-application-runtime-log-command.js";
+import { CheckLogDrainCommand } from "@clevercloud/client/cc-api-commands/log-drain/check-log-drain-command.js";
 import { CreateLogDrainCommand } from "@clevercloud/client/cc-api-commands/log-drain/create-log-drain-command.js";
 import { DeleteLogDrainCommand } from "@clevercloud/client/cc-api-commands/log-drain/delete-log-drain-command.js";
 import { DisableLogDrainCommand } from "@clevercloud/client/cc-api-commands/log-drain/disable-log-drain-command.js";
 import { EnableLogDrainCommand } from "@clevercloud/client/cc-api-commands/log-drain/enable-log-drain-command.js";
 import { GetLogDrainCommand } from "@clevercloud/client/cc-api-commands/log-drain/get-log-drain-command.js";
+import { GetLogDrainTestCommandCommand } from "@clevercloud/client/cc-api-commands/log-drain/get-log-drain-test-command-command.js";
 import { ListLogDrainCommand } from "@clevercloud/client/cc-api-commands/log-drain/list-log-drain-command.js";
+import { ResetLogDrainCursorCommand } from "@clevercloud/client/cc-api-commands/log-drain/reset-log-drain-cursor-command.js";
 import { GetMateriaInfoCommand } from "@clevercloud/client/cc-api-commands/materia/get-materia-info-command.js";
 import { GetMatomoInfoCommand } from "@clevercloud/client/cc-api-commands/matomo/get-matomo-info-command.js";
+import { RebootMatomoCommand } from "@clevercloud/client/cc-api-commands/matomo/reboot-matomo-command.js";
+import { RebuildMatomoCommand } from "@clevercloud/client/cc-api-commands/matomo/rebuild-matomo-command.js";
+import { CheckMetabaseVersionCommand } from "@clevercloud/client/cc-api-commands/metabase/check-metabase-version-command.js";
+import { GetMetabaseInfoCommand } from "@clevercloud/client/cc-api-commands/metabase/get-metabase-info-command.js";
+import { RebootMetabaseCommand } from "@clevercloud/client/cc-api-commands/metabase/reboot-metabase-command.js";
+import { RebuildMetabaseCommand } from "@clevercloud/client/cc-api-commands/metabase/rebuild-metabase-command.js";
+import { UpdateMetabaseVersionCommand } from "@clevercloud/client/cc-api-commands/metabase/update-metabase-version-command.js";
+import { GetHeatMapCommand } from "@clevercloud/client/cc-api-commands/metrics/get-heat-map-command.js";
 import { GetMetricsCommand } from "@clevercloud/client/cc-api-commands/metrics/get-metrics-command.js";
+import { GetStatusCodeDistributionCommand } from "@clevercloud/client/cc-api-commands/metrics/get-status-code-distribution-command.js";
+import { StreamRequestsCommand } from "@clevercloud/client/cc-api-commands/metrics/stream-requests-command.js";
 import { CancelMigrationCommand } from "@clevercloud/client/cc-api-commands/migration/cancel-migration-command.js";
 import { GetMigrationCommand } from "@clevercloud/client/cc-api-commands/migration/get-migration-command.js";
 import { ListMigrationCommand } from "@clevercloud/client/cc-api-commands/migration/list-migration-command.js";
@@ -119,19 +177,29 @@ import { GetOauthConsumerCommand } from "@clevercloud/client/cc-api-commands/oau
 import { GetOauthConsumerSecretCommand } from "@clevercloud/client/cc-api-commands/oauth-consumer/get-oauth-consumer-secret-command.js";
 import { ListOauthConsumerCommand } from "@clevercloud/client/cc-api-commands/oauth-consumer/list-oauth-consumer-command.js";
 import { UpdateOauthConsumerCommand } from "@clevercloud/client/cc-api-commands/oauth-consumer/update-oauth-consumer-command.js";
-import { DeleteOauthTokenCommand } from "@clevercloud/client/cc-api-commands/oauth-token/delete-all-oauth-tokens-command.js";
+import { DeleteAllOauthTokensCommand } from "@clevercloud/client/cc-api-commands/oauth-token/delete-all-oauth-tokens-command.js";
+import { DeleteOauthTokenCommand } from "@clevercloud/client/cc-api-commands/oauth-token/delete-oauth-token-command.js";
+import { GetCurrentOauthTokenInfoCommand } from "@clevercloud/client/cc-api-commands/oauth-token/get-current-oauth-token-info-command.js";
 import { ListOauthTokenCommand } from "@clevercloud/client/cc-api-commands/oauth-token/list-oauth-token-command.js";
 import { AddOrganisationMemberCommand } from "@clevercloud/client/cc-api-commands/organisation/add-organisation-member-command.js";
 import { CreateOrganisationCommand } from "@clevercloud/client/cc-api-commands/organisation/create-organisation-command.js";
 import { DeleteOrganisationCommand } from "@clevercloud/client/cc-api-commands/organisation/delete-organisation-command.js";
 import { GetOrganisationCommand } from "@clevercloud/client/cc-api-commands/organisation/get-organisation-command.js";
-import { GetOrganisationSummariesCommand } from "@clevercloud/client/cc-api-commands/organisation/get-organisation-summaries-command.js";
+import { GetOrganisationSummaryCommand } from "@clevercloud/client/cc-api-commands/organisation/get-organisation-summary-command.js";
 import { ListOrganisationCommand } from "@clevercloud/client/cc-api-commands/organisation/list-organisation-command.js";
 import { ListOrganisationMemberCommand } from "@clevercloud/client/cc-api-commands/organisation/list-organisation-member-command.js";
 import { RemoveOrganisationMemberCommand } from "@clevercloud/client/cc-api-commands/organisation/remove-organisation-member-command.js";
 import { UpdateOrganisationAvatarCommand } from "@clevercloud/client/cc-api-commands/organisation/update-organisation-avatar-command.js";
 import { UpdateOrganisationCommand } from "@clevercloud/client/cc-api-commands/organisation/update-organisation-command.js";
 import { UpdateOrganisationMemberCommand } from "@clevercloud/client/cc-api-commands/organisation/update-organisation-member-command.js";
+import { CheckOtoroshiVersionCommand } from "@clevercloud/client/cc-api-commands/otoroshi/check-otoroshi-version-command.js";
+import { CreateOtoroshiNetworkGroupCommand } from "@clevercloud/client/cc-api-commands/otoroshi/create-otoroshi-network-group-command.js";
+import { DeleteOtoroshiNetworkGroupCommand } from "@clevercloud/client/cc-api-commands/otoroshi/delete-otoroshi-network-group-command.js";
+import { GetOtoroshiConfigCommand } from "@clevercloud/client/cc-api-commands/otoroshi/get-otoroshi-config-command.js";
+import { GetOtoroshiInfoCommand } from "@clevercloud/client/cc-api-commands/otoroshi/get-otoroshi-info-command.js";
+import { RebootOtoroshiCommand } from "@clevercloud/client/cc-api-commands/otoroshi/reboot-otoroshi-command.js";
+import { RebuildOtoroshiCommand } from "@clevercloud/client/cc-api-commands/otoroshi/rebuild-otoroshi-command.js";
+import { UpdateOtoroshiVersionCommand } from "@clevercloud/client/cc-api-commands/otoroshi/update-otoroshi-version-command.js";
 import { AuthorizePaypalCommand } from "@clevercloud/client/cc-api-commands/payment/authorize-paypal-command.js";
 import { AuthorizeStripeCommand } from "@clevercloud/client/cc-api-commands/payment/authorize-stripe-command.js";
 import { GetStripeIntentCommand } from "@clevercloud/client/cc-api-commands/payment/get-stripe-intent-command.js";
@@ -184,6 +252,7 @@ export const commands: Record<string, new (params?: any) => any> = {
   GetAddonCommand,
   GetAddonSsoCommand,
   ListAddonCommand,
+  ListAddonInstanceCommand,
   UpdateAddonCommand,
   CreateAddonProviderCommand,
   CreateAddonProviderFeatureCommand,
@@ -204,12 +273,28 @@ export const commands: Record<string, new (params?: any) => any> = {
   ListApplicationCommand,
   UndeployApplicationCommand,
   UpdateApplicationCommand,
+  ListArticleCommand,
   ConfirmAuthMfaCommand,
   CreateAuthMfaCommand,
   DeleteAuthMfaCommand,
   GetAuthMfaBackupCodesCommand,
+  RequestAuthPasswordResetCommand,
   UpdateAuthPasswordCommand,
   ListBackupCommand,
+  CreateCellarBucketCommand,
+  DeleteCellarBucketCommand,
+  DeleteCellarObjectCommand,
+  GetCellarBucketCommand,
+  GetCellarCredentialsCommand,
+  GetCellarCredentialsPresignedUrlCommand,
+  GetCellarInfoCommand,
+  GetCellarObjectCommand,
+  GetCellarObjectDownloadUrlCommand,
+  GetCellarObjectUploadUrlCommand,
+  ListCellarBucketCommand,
+  ListCellarObjectCommand,
+  RenewCellarCredentialsCommand,
+  UploadCellarObjectCommand,
   GetConfigProviderCommand,
   UpdateConfigProviderCommand,
   ActivateCouponCommand,
@@ -247,6 +332,35 @@ export const commands: Record<string, new (params?: any) => any> = {
   ListInvoiceCommand,
   ListUnpaidInvoiceCommand,
   GetJenkinsInfoCommand,
+  CheckKeycloakVersionCommand,
+  CreateKeycloakNetworkGroupCommand,
+  DeleteKeycloakNetworkGroupCommand,
+  GetKeycloakInfoCommand,
+  RebootKeycloakCommand,
+  RebuildKeycloakCommand,
+  UpdateKeycloakVersionCommand,
+  AddKubernetesPersistentStorageCommand,
+  CheckKubernetesClusterVersionCommand,
+  CreateKubernetesClusterCommand,
+  CreateKubernetesNodeGroupCommand,
+  DeleteKubernetesClusterCommand,
+  DeleteKubernetesNodeGroupCommand,
+  GetKubernetesClusterCommand,
+  GetKubernetesKubeconfigCommand,
+  GetKubernetesKubeconfigPresignedUrlCommand,
+  GetKubernetesNodeGroupCommand,
+  GetKubernetesProductCommand,
+  GetKubernetesQuotaCommand,
+  ListKubernetesClusterCommand,
+  ListKubernetesClusterEventCommand,
+  ListKubernetesNodeGroupCommand,
+  ListKubernetesUsageCommand,
+  RedeployKubernetesClusterCommand,
+  ResumeKubernetesClusterCommand,
+  ResumeKubernetesNodeGroupCommand,
+  UpdateKubernetesClusterCommand,
+  UpdateKubernetesClusterVersionCommand,
+  UpdateKubernetesNodeGroupCommand,
   AddLinkCommand,
   AddApplicationToApplicationLinkCommand,
   AddApplicationToAddonLinkCommand,
@@ -255,19 +369,31 @@ export const commands: Record<string, new (params?: any) => any> = {
   RemoveApplicationToApplicationLinkCommand,
   RemoveApplicationToAddonLinkCommand,
   GetLoadBalancerInfoCommand,
-  ListLogCommand,
   StreamAddonRuntimeLogCommand,
   StreamApplicationAccessLogCommand,
   StreamApplicationRuntimeLogCommand,
+  CheckLogDrainCommand,
   CreateLogDrainCommand,
   DeleteLogDrainCommand,
   DisableLogDrainCommand,
   EnableLogDrainCommand,
   GetLogDrainCommand,
+  GetLogDrainTestCommandCommand,
   ListLogDrainCommand,
+  ResetLogDrainCursorCommand,
   GetMateriaInfoCommand,
   GetMatomoInfoCommand,
+  RebootMatomoCommand,
+  RebuildMatomoCommand,
+  CheckMetabaseVersionCommand,
+  GetMetabaseInfoCommand,
+  RebootMetabaseCommand,
+  RebuildMetabaseCommand,
+  UpdateMetabaseVersionCommand,
+  GetHeatMapCommand,
   GetMetricsCommand,
+  GetStatusCodeDistributionCommand,
+  StreamRequestsCommand,
   CancelMigrationCommand,
   GetMigrationCommand,
   ListMigrationCommand,
@@ -299,19 +425,29 @@ export const commands: Record<string, new (params?: any) => any> = {
   GetOauthConsumerSecretCommand,
   ListOauthConsumerCommand,
   UpdateOauthConsumerCommand,
+  DeleteAllOauthTokensCommand,
   DeleteOauthTokenCommand,
+  GetCurrentOauthTokenInfoCommand,
   ListOauthTokenCommand,
   AddOrganisationMemberCommand,
   CreateOrganisationCommand,
   DeleteOrganisationCommand,
   GetOrganisationCommand,
-  GetOrganisationSummariesCommand,
+  GetOrganisationSummaryCommand,
   ListOrganisationCommand,
   ListOrganisationMemberCommand,
   RemoveOrganisationMemberCommand,
   UpdateOrganisationAvatarCommand,
   UpdateOrganisationCommand,
   UpdateOrganisationMemberCommand,
+  CheckOtoroshiVersionCommand,
+  CreateOtoroshiNetworkGroupCommand,
+  DeleteOtoroshiNetworkGroupCommand,
+  GetOtoroshiConfigCommand,
+  GetOtoroshiInfoCommand,
+  RebootOtoroshiCommand,
+  RebuildOtoroshiCommand,
+  UpdateOtoroshiVersionCommand,
   AuthorizePaypalCommand,
   AuthorizeStripeCommand,
   GetStripeIntentCommand,

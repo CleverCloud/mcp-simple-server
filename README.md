@@ -28,7 +28,7 @@ The code runs locally on your machine with a configurable timeout. The full [`@c
 
 ### Prerequisites
 
-- Node.js >= 22
+- Node.js >= 26
 - A Clever Cloud API token ([create one here](https://console.clever-cloud.com/users/me/tokens))
 
 ### Install

@@ -10,7 +10,7 @@
     "url": "https://github.com/CleverCloud/mcp-simple-server"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=26"
   },
   "bin": {
     "mcp-simple-server": "./dist/index.js"
@@ -26,13 +26,13 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "@clevercloud/client": "^12.0.0",
-    "@modelcontextprotocol/sdk": "^1.29.0",
-    "zod": "^4.3.6"
+    "@clevercloud/client": "^12.6.7",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@types/node": "^25.5.2",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
   }
 }

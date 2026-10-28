@@ -3,13 +3,10 @@ import path from "node:path";
 import type { CatalogEntry } from "../src/catalog/catalog.js";
 
 const CLIENT_PKG_DIR = path.resolve("node_modules/@clevercloud/client");
-const COMMANDS_SRC_DIR = path.join(
+// Since 12.6, the package only ships dist/, with .d.ts next to the compiled .js
+const COMMANDS_DIR = path.join(
   CLIENT_PKG_DIR,
-  "src/clients/cc-api/commands",
-);
-const COMMANDS_TYPES_DIR = path.join(
-  CLIENT_PKG_DIR,
-  "dist/types/src/clients/cc-api/commands",
+  "dist/src/clients/cc-api/commands",
 );
 const CATALOG_OUT = path.resolve("src/catalog/command-catalog.json");
 const REGISTRY_OUT = path.resolve("src/commands/command-registry.ts");
@@ -168,10 +165,10 @@ function main() {
   const registryEntries: string[] = [];
   const seenClassNames = new Set<string>();
 
-  const categories = fs.readdirSync(COMMANDS_SRC_DIR).sort();
+  const categories = fs.readdirSync(COMMANDS_DIR).sort();
 
   for (const category of categories) {
-    const categoryDir = path.join(COMMANDS_SRC_DIR, category);
+    const categoryDir = path.join(COMMANDS_DIR, category);
     if (!fs.statSync(categoryDir).isDirectory()) continue;
 
     const files = fs
@@ -187,7 +184,7 @@ function main() {
 
       // Try to read the types file (shared across all classes in the file)
       const typesFile = file.replace(".js", ".types.d.ts");
-      const typesPath = path.join(COMMANDS_TYPES_DIR, category, typesFile);
+      const typesPath = path.join(COMMANDS_DIR, category, typesFile);
       const typesContent = fs.existsSync(typesPath)
         ? fs.readFileSync(typesPath, "utf-8")
         : null;
