@@ -10,6 +10,7 @@ import { createClient } from "./client/create-client.ts";
 import { getConfig } from "./config.ts";
 import { registerDocTool } from "./tools/doc.ts";
 import { registerExecuteTool } from "./tools/execute.ts";
+import { createTextResult } from "./tools/result.ts";
 import { registerSearchTool } from "./tools/search.ts";
 
 const pkgPath = join(import.meta.dirname, "../package.json");
@@ -21,9 +22,10 @@ async function main() {
 
   const server = new McpServer({ name, version });
 
-  registerSearchTool(server);
-  registerExecuteTool(server, client, config);
-  await registerDocTool(server);
+  const textResult = createTextResult(config);
+  registerSearchTool(server, textResult);
+  registerExecuteTool(server, textResult, client, config);
+  await registerDocTool(server, textResult);
 
   const transport = new StdioServerTransport();
   await server.connect(transport);

@@ -4,14 +4,14 @@ import { z } from "zod";
 import type { CatalogEntry } from "../catalog/catalog.ts";
 // A static import makes tsc emit the JSON into dist/, unlike a runtime readFileSync
 import catalogJson from "../catalog/command-catalog.json" with { type: "json" };
-import { textResult } from "./result.ts";
+import type { TextResult } from "./result.ts";
 
 // The inferred literal union (sparse `params` keys widened to `?: undefined`) isn't
 // comparable to CatalogEntry; the generator guarantees the shape
 const catalog = catalogJson as unknown as CatalogEntry[];
 const categories = [...new Set(catalog.map((e) => e.category))];
 
-export function registerSearchTool(server: McpServer): void {
+export function registerSearchTool(server: McpServer, textResult: TextResult): void {
   server.registerTool(
     "search",
     {

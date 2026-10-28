@@ -4,10 +4,11 @@ import { z } from "zod";
 
 import { commands } from "../commands/command-registry.ts";
 import type { Config } from "../config.ts";
-import { textResult } from "./result.ts";
+import type { TextResult } from "./result.ts";
 
 export function registerExecuteTool(
   server: McpServer,
+  textResult: TextResult,
   client: CcApiClient,
   config: Config,
 ): void {
@@ -87,14 +88,7 @@ Notes:
           timeoutPromise,
         ]);
 
-        const json = JSON.stringify(result, null, 2);
-        let resultStr = json !== undefined ? json : "undefined";
-
-        if (resultStr.length > config.maxOutputLength) {
-          resultStr =
-            resultStr.slice(0, config.maxOutputLength) +
-            `\n\n... (truncated, ${resultStr.length} total chars)`;
-        }
+        const resultStr = JSON.stringify(result, null, 2) ?? "undefined";
 
         const output = [
           logs.length > 0 ? `Console output:\n${logs.join("\n")}\n\n` : "",

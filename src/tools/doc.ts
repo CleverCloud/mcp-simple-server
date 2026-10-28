@@ -1,7 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
-import { textResult } from "./result.ts";
+import type { TextResult } from "./result.ts";
 
 const LLMS_TXT_URL = "https://www.clever.cloud/developers/llms.txt";
 const ALLOWED_HOST = "www.clever.cloud";
@@ -57,7 +57,7 @@ async function fetchIndex(): Promise<DocEntry[]> {
   return parseIndex(await response.text());
 }
 
-export async function registerDocTool(server: McpServer): Promise<void> {
+export async function registerDocTool(server: McpServer, textResult: TextResult): Promise<void> {
   let index: DocEntry[] = [];
   try {
     index = await fetchIndex();
