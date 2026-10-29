@@ -12,6 +12,8 @@ import { INSPECT_OPTIONS, inspectSafely, maskToken, type TextResult } from "./re
 const AsyncFunction = async function () {}.constructor as new (
   ...params: string[]
 ) => (...args: unknown[]) => Promise<unknown>;
+// Names the code in stack traces, to tell its frames apart from the others
+const SOURCE_URL = "execute-tool-code";
 
 export function registerExecuteTool(
   server: McpServer,
@@ -67,7 +69,8 @@ Notes:
 
       try {
         signal.throwIfAborted();
-        const run = new AsyncFunction("client", "commands", "console", "signal", code);
+        const source = `${code}\n//# sourceURL=${SOURCE_URL}`;
+        const run = new AsyncFunction("client", "commands", "console", "signal", source);
         // Racing the abort answers on time even if the code ignores the signal,
         // the code then keeps running in the background until it settles
         const result = await Promise.race([
@@ -136,6 +139,59 @@ function describeFailure(error: unknown, signal: AbortSignal, timeoutMs: number)
     const isTimeout = signal.reason instanceof DOMException && signal.reason.name === "TimeoutError";
     return `Error: the execution ${isTimeout ? `timed out after ${timeoutMs} ms` : "was cancelled"}. Its client requests were asked to stop, but some operations may already have taken effect: check the current state before retrying.`;
   }
-  if (error instanceof Error) return error.stack ?? `${error.name}: ${error.message}`;
-  return `Error: ${String(error)}`;
+  // The error comes from the code, so may have getters that throw
+  try {
+    return describeError(error);
+  } catch {
+    return "Error: the code threw a value that cannot be described";
+  }
+}
+
+/**
+ * The error, where it was thrown in the code and what caused it. The stack is
+ * left out: past the code, its frames are the server's, and only tell where
+ * it is installed.
+ */
+function describeError(error: unknown): string {
+  if (!(error instanceof Error)) return `Error: ${inspectSafely(error)}`;
+  const position = codePosition(error.stack);
+  return [
+    `${error.name}: ${error.message}`,
+    position && `    at ${position} of the code`,
+    ...causesOf(error).map((cause) => `Caused by: ${cause}`),
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+// A frame of the code in a V8 stack trace, such as `    at check (execute-tool-code:4:9)`
+const CODE_FRAME = new RegExp(`^\\s+at (?:.* \\()?${SOURCE_URL}:(\\d+):(\\d+)\\)?$`, "m");
+// The code becomes the body of a function whose source starts with two lines
+// of header (ECMA-262 CreateDynamicFunction): its line numbers are offset by two
+const HEADER_LINES = 2;
+
+/** Where the innermost frame of the code is, if the stack has one */
+function codePosition(stack: string | undefined): string | undefined {
+  const [, line, column] = CODE_FRAME.exec(stack ?? "") ?? [];
+  const codeLine = Number(line) - HEADER_LINES;
+  return codeLine >= 1 ? `line ${codeLine}, column ${column}` : undefined;
+}
+
+const MAX_CAUSES = 5;
+
+/** What led to the error, such as the network failure under a request error */
+function causesOf(error: Error): string[] {
+  const causes: string[] = [];
+  const seen = new Set<unknown>([error]);
+  let cause = error.cause;
+  while (cause !== undefined && !seen.has(cause) && causes.length < MAX_CAUSES) {
+    seen.add(cause);
+    if (!(cause instanceof Error)) {
+      causes.push(inspectSafely(cause));
+      break;
+    }
+    causes.push(`${cause.name}: ${cause.message}`);
+    cause = cause.cause;
+  }
+  return causes;
 }

@@ -65,11 +65,33 @@ describe("execute", () => {
     assert.match(text, /^Result \(not representable as JSON\):\n<ref \*1> \{ n: 1n, self: \[Circular \*1\] \}$/);
   });
 
-  test("reports errors thrown by the code", async () => {
+  test("reports errors with their position in the code and their causes, without the server's stack", async () => {
     const client = await connect(createPendingClient().client);
-    const { text, isError } = await execute(client, 'throw new TypeError("bad input");');
-    assert.equal(isError, true);
-    assert.match(text, /^TypeError: bad input/);
+    const thrown = await execute(
+      client,
+      'const check = () => {\n  throw new TypeError("bad input", { cause: new Error("fetch failed", { cause: "ECONNRESET" }) });\n};\ncheck();',
+    );
+    assert.deepEqual(thrown, {
+      text: "TypeError: bad input\n    at line 2, column 9 of the code\nCaused by: Error: fetch failed\nCaused by: 'ECONNRESET'",
+      isError: true,
+    });
+    assert.equal((await execute(client, "return 1 +;")).text, "SyntaxError: Unexpected token ';'");
+  });
+
+  test("gives the position in the code only, not in code it evaluates, and survives errors that cannot be read", async () => {
+    const client = await connect(createPendingClient().client);
+    assert.equal(
+      (await execute(client, "await Promise.resolve();\r\neval('\\n\\nnull.bar');")).text,
+      "TypeError: Cannot read properties of null (reading 'bar')\n    at line 2, column 1 of the code",
+    );
+    assert.equal(
+      (await execute(client, 'const e = new Error("e"); e.cause = e; throw e;')).text,
+      "Error: e\n    at line 1, column 11 of the code",
+    );
+    assert.equal(
+      (await execute(client, 'const e = new Error(); Object.defineProperty(e, "name", { get() { throw 1; } }); throw e;')).text,
+      "Error: the code threw a value that cannot be described",
+    );
   });
 
   test("times out, and aborts the requests even when the code doesn't pass the signal", async () => {
