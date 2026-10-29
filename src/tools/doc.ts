@@ -9,6 +9,8 @@ const ALLOWED_HOST = "www.clever.cloud";
 const FETCH_TIMEOUT_MS = 10_000;
 // The index is a few dozen KB: anything far bigger is not what we expect
 const MAX_INDEX_LENGTH = 1_000_000;
+// The redirect of a page that moved comes in the first few hundred characters
+const MAX_HTML_LENGTH = 10_000;
 
 interface DocEntry {
   category: string;
@@ -105,12 +107,8 @@ async function fetchPage(
   maxLength: number,
 ): Promise<{ text: string; isError: boolean }> {
   const parsed = new URL(url);
-  if (parsed.protocol !== "https:") {
-    return { text: `Only https:// URLs are allowed (got: ${parsed.protocol})`, isError: true };
-  }
-  if (parsed.hostname !== ALLOWED_HOST) {
-    return { text: `Only ${ALLOWED_HOST} URLs are allowed (got: ${parsed.hostname})`, isError: true };
-  }
+  const refusal = checkPageUrl(parsed);
+  if (refusal) return { text: refusal, isError: true };
 
   // `redirect: "manual"` prevents a page from bouncing the client to an
   // off-allowlist host after the host check passed
@@ -119,18 +117,51 @@ async function fetchPage(
     redirect: "manual",
     signal: AbortSignal.any([signal, AbortSignal.timeout(FETCH_TIMEOUT_MS)]),
   });
+  if (response.status >= 300 && response.status < 400) {
+    await response.body?.cancel();
+    return { text: movedTo(response.headers.get("location"), parsed), isError: true };
+  }
   if (!response.ok) {
     await response.body?.cancel();
-    const isRedirect = response.status >= 300 && response.status < 400;
-    return {
-      text: isRedirect
-        ? `Unexpected redirect (HTTP ${response.status}) fetching ${url}`
-        : `HTTP ${response.status} fetching ${url}`,
-      isError: true,
-    };
+    return { text: `HTTP ${response.status} fetching ${url}`, isError: true };
+  }
+  const type = response.headers.get("content-type")?.split(";")[0]?.trim().toLowerCase();
+  if (type === "text/html") return { text: await describeHtmlPage(response, parsed), isError: true };
+  if (type !== "text/markdown" && type !== "text/plain") {
+    await response.body?.cancel();
+    return { text: `${url} is not a markdown page (got: ${type ?? "no content type"})`, isError: true };
   }
   const { text, truncated } = await readText(response, maxLength);
   return { text: truncated ? `${text}\n\n... (page cut to the output budget)` : text, isError: false };
+}
+
+/**
+ * A page that moved is left at its old address as an HTML page redirecting to
+ * the new one, whatever the Accept header: such a page is pointed to its new
+ * address, any other has no markdown version.
+ */
+async function describeHtmlPage(response: Response, url: URL): Promise<string> {
+  const { text } = await readText(response, MAX_HTML_LENGTH);
+  const refresh = /<meta\s[^>]*http-equiv=["']?refresh\b[^>]*>/i.exec(text)?.[0];
+  const location = refresh && /\bcontent=["']?\d*\s*;\s*url=([^"'\s>]+)/i.exec(refresh)?.[1];
+  return location ? movedTo(location, url) : `${url.href} has no markdown version`;
+}
+
+/** Why the page at `url` must not be fetched, if it must not */
+function checkPageUrl(url: URL): string | undefined {
+  if (url.protocol !== "https:") return `Only https:// URLs are allowed (got: ${url.protocol})`;
+  if (url.hostname !== ALLOWED_HOST) return `Only ${ALLOWED_HOST} URLs are allowed (got: ${url.hostname})`;
+  return undefined;
+}
+
+/** Points to the new address of a page, once checked, rather than following it */
+function movedTo(location: string | null, from: URL): string {
+  const target = location === null ? null : URL.parse(location, from);
+  if (!target) return `${from.href} redirects to an invalid address`;
+  const refusal = checkPageUrl(target);
+  return refusal
+    ? `${from.href} redirects to ${target.href}, which cannot be fetched: ${refusal}`
+    : `This page moved to ${target.href}: fetch that URL instead.`;
 }
 
 /**

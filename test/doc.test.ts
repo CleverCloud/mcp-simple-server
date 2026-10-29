@@ -17,12 +17,25 @@ const INDEX = `# Clever Cloud documentation
 - [PostgreSQL](https://www.clever.cloud/developers/doc/addons/postgresql/): Managed PostgreSQL databases
 `;
 
+function html(body: string): Response {
+  return new Response(body, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+}
+
 /** Replaces fetch: the index URL answers with the given responses in turn, pages with their URL */
 function mockFetch(...indexResponses: (() => Response | Promise<Response>)[]) {
   return mock.method(globalThis, "fetch", async (input: URL | string) => {
     const url = String(input);
     if (url.endsWith("/llms.txt")) return indexResponses.shift()?.() ?? new Response(INDEX);
     if (url.endsWith("/moved")) return new Response(null, { status: 301, headers: { Location: "https://example.com" } });
+    if (url.endsWith("/renamed")) return new Response(null, { status: 308, headers: { Location: "/developers/doc/new/" } });
+    if (url.endsWith("/alias")) {
+      // How the documentation leaves a page that moved at its old address
+      const target = "https://www.clever.cloud/developers/doc/new/";
+      return html(`<!doctype html><html><head><link rel=canonical href=${target}><meta http-equiv=refresh content="0; url=${target}"></head></html>`);
+    }
+    if (url.endsWith("/relative-alias")) return html(`<META content='0;URL=/developers/doc/new/' HTTP-EQUIV="Refresh">`);
+    if (url.endsWith("/html")) return html("<!doctype html><html><body>Hello</body></html>");
+    if (url.endsWith("/json")) return Response.json({ page: 1 });
     if (url.endsWith("/huge")) return new Response("x".repeat(1_000_000));
     if (url.endsWith("/accents")) {
       // "é" is two bytes in UTF-8, split here across two chunks
@@ -35,6 +48,7 @@ function mockFetch(...indexResponses: (() => Response | Promise<Response>)[]) {
             controller.close();
           },
         }),
+        { headers: { "Content-Type": "text/markdown; charset=utf-8" } },
       );
     }
     return new Response(`# Page at ${url}`);
@@ -140,12 +154,32 @@ describe("doc", () => {
     assert.equal(fetch.mock.callCount(), 1);
   });
 
-  test("does not follow redirects", async () => {
+  test("points to the new address of a page that moved, without following it", async () => {
+    const fetch = mockFetch();
+    const doc = await connect();
+    const moved = { text: "This page moved to https://www.clever.cloud/developers/doc/new/: fetch that URL instead.", isError: true };
+
+    assert.deepEqual(await doc({ url: "https://www.clever.cloud/renamed" }), moved);
+    assert.deepEqual(await doc({ url: "https://www.clever.cloud/alias" }), moved);
+    assert.deepEqual(await doc({ url: "https://www.clever.cloud/relative-alias" }), moved);
+    assert.deepEqual(await doc({ url: "https://www.clever.cloud/moved" }), {
+      text: "https://www.clever.cloud/moved redirects to https://example.com/, which cannot be fetched: Only www.clever.cloud URLs are allowed (got: example.com)",
+      isError: true,
+    });
+    assert.equal(fetch.mock.callCount(), 4);
+  });
+
+  test("returns markdown and plain text pages only", async () => {
     mockFetch();
     const doc = await connect();
-    const { text, isError } = await doc({ url: "https://www.clever.cloud/moved" });
-    assert.equal(isError, true);
-    assert.equal(text, "Unexpected redirect (HTTP 301) fetching https://www.clever.cloud/moved");
+    assert.deepEqual(await doc({ url: "https://www.clever.cloud/html" }), {
+      text: "https://www.clever.cloud/html has no markdown version",
+      isError: true,
+    });
+    assert.deepEqual(await doc({ url: "https://www.clever.cloud/json" }), {
+      text: "https://www.clever.cloud/json is not a markdown page (got: application/json)",
+      isError: true,
+    });
   });
 
   test("decodes characters split across chunks", async () => {
